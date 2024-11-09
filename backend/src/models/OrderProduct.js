@@ -32,8 +32,8 @@ const orderProductSchema = new mongoose.Schema({
     },
     isPaid: { type: Boolean,  default: false },
     paidAt: { type: Date },
-    isDelerved: { type: Boolean,  default: false },
-    DOMRectList: { type: Date },
+    isDelivered: { type: Boolean,  default: false },
+    deliveredAt: { type: Date },
 },
 {
     timestamps: true,
