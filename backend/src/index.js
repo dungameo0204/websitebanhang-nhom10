@@ -2,12 +2,12 @@ const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const routes = require('./routes');
-const bodyParser = require('body-parser');
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 const dbURI = process.env.DB_URL;
-app.use(bodyParser.json());
+app.use(express.json());
 
 routes(app);
 mongoose.connect(dbURI)
