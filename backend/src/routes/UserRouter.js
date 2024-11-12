@@ -9,4 +9,5 @@ routes.delete('/delete-user/:id',authMiddleware, userController.deleteUser);
 routes.get('/user-detail/:id',authMiddleware, userController.getUserDetail);
 routes.get('/get-all',authMiddleware, userController.getAllUser);
 routes.post('/refresh-token', userController.refreshToken);
+routes.delete('/delete-many',authMiddleware, userController.deleteManyUser);
 module.exports = routes;

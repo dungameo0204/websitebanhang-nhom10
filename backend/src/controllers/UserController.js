@@ -121,6 +121,22 @@ const refreshToken = async (req,res) => {
   }
 };
 
+const deleteManyUser = async (req,res) => {
+  try{
+    const ids = req.body;
+    if (!ids) {
+      return res.status(404).json({error: 'Users not found'});
+    }
+
+    const response = await userService.deleteManyUser(ids);
+    return res.status(200).json(response);
+  
+  } catch (error) {
+      return res.status(404).json({error: error.message});
+  }
+};
+
+
 module.exports = {
     createUser,
     loginUser,
@@ -128,5 +144,6 @@ module.exports = {
     deleteUser,
     getUserDetail,
     getAllUser,
-    refreshToken
+    refreshToken,
+    deleteManyUser
 };
