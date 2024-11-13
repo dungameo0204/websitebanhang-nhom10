@@ -5,6 +5,7 @@ import ProductsPage from "../pages/ProductsPage/ProductsPage";
 import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
 import SignInPage from "../pages/SignInPage/SignInPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
+import AdminPage from "../pages/AdminPage/AdminPage";
 
 export const routes = [
     {
@@ -40,6 +41,10 @@ export const routes = [
     {
         path: '*',
         page: NotFoundPage
+    },
+    {
+        path: 'check',
+        page: AdminPage
     }
 
 ]

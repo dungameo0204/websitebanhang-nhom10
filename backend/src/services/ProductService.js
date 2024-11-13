@@ -31,7 +31,7 @@ const createProduct = (newProduct) => {
         } catch (error) {
             reject({
                 status: 'ERROR',
-                message: error.message || 'an error occured when creating new product item'
+                message: error.message || 'an error occured when creating new product item-service'
             });
         }
     })
@@ -67,7 +67,7 @@ const updateProduct = (id, data) => {
     });
 }
 
-const getProductDetails = (id) => { 
+const getDetailedProduct = (id) => { 
     return new Promise(async (resolve, reject) => {
         try {
             
@@ -202,7 +202,7 @@ const deleteProduct = (id) => {
 module.exports = {
     createProduct,
     updateProduct,
-    getProductDetails,
+    getDetailedProduct,
     getAllProduct,
     deleteProduct
 }

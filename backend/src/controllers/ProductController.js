@@ -20,7 +20,7 @@ const createProduct = async (req,res) => {
     }catch (error){
         return res.status(500).json({
             status: 'ERROR',
-            message : error.message || 'An unexpected error occurred while creating'
+            message : error.message || 'An unexpected error occurred while creating - controllẻ'
         })
     }
 }
@@ -49,7 +49,7 @@ const updateProduct = async (req,res) => {
     }
 }
 
-const getProductDetails = async (req,res) => {
+const getDetailedProduct = async (req,res) => {
     try{
         //Lấy productID từ req
         const productId = req.params.id;
@@ -61,7 +61,7 @@ const getProductDetails = async (req,res) => {
             })
         }
 
-        const response = await ProductService.getProductDetails(productId);
+        const response = await ProductService.getDetailedProduct(productId);
 
         return res.status(200).json(response);
     }catch (error){
@@ -121,7 +121,7 @@ const deleteProduct = async (req,res) => {
 module.exports = {
     createProduct,
     updateProduct,
-    getProductDetails,
+    getDetailedProduct,
     getAllProduct,
     deleteProduct
 }
