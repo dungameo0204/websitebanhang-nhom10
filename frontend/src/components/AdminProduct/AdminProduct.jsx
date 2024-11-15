@@ -1,6 +1,6 @@
-import { Button, Modal, Form } from "antd";
-import React, { useEffect, useState } from "react";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Form, Space } from "antd";
+import React, { useEffect, useState, useRef } from "react";
+import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { WrapperHeader, WrapperUploadFile } from "./style";
 import TableComponent from "../TableComponent/TableComponent";
 import InputComponent from "../InputComponent/InputComponent";
@@ -86,6 +86,11 @@ const handleDeleteProduct = () => {
   //delete modal
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  //Search
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+
   /*--- Hooks ---*/
   //Create product mutation hooks
   const mutation = useMutationHooks((data) => {
@@ -131,7 +136,8 @@ const handleDeleteProduct = () => {
 
   
   //Form hook:
-  const [form,] = Form.useForm(); //Dùng form hook để tạo instance của Form -> form
+  const [form] = Form.useForm(); //Dùng form hook để tạo instance của Form -> form
+  const [formDrawer] = Form.useForm();
 
 
   /*--- HANDLE FORM ---*/
@@ -239,42 +245,8 @@ const handleDeleteProduct = () => {
   });
 
   const { isPending: isLoadingProducts, data: products } = queryProduct;
-
-  //Column Processing
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-    },
-    {
-      title: "Rating",
-      dataIndex: "rating",
-    },
-    {
-      title: "Type",
-      dataIndex: "type",
-    },
-    {
-      title: "Action",
-      dataIndex: "action",
-      render: renderAction,
-    },
-  ];
-
-  //Row data Processing
-  const dataTable =
-    products?.data?.length &&
-    products?.data?.map((product) => {
-      return { ...product, key: product._id }; // Duyệt qua mỗi phần tử trong mảng products, thêm vào dữ liệu mỗi phần tử này một thuộc tính key với giá trị của key
-      // tương đương _id của đối tượng đó ==> Tạo mảng mới và gán cho data
-    });
-
-    
+  
+  
   /*--- Handle Drawer ---*/
 
   const handleOnChangeDetailed = (e) => {
@@ -316,7 +288,7 @@ const handleDeleteProduct = () => {
       description: "",
       image: "",
     });
-    form.resetFields();
+    formDrawer.resetFields();
   };
 
 
@@ -333,6 +305,189 @@ const handleDeleteProduct = () => {
   //   });
   // }
 
+
+  /*--- Handle Search ---*/
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+  };
+
+
+  const handleReset = (clearFilters, confirm) => {
+    clearFilters();
+    setSearchText('');
+    confirm();
+  };
+
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}   // Ngăn không truyền tín hiệu (onkeydown) lên các phần tử cha
+      >
+        <InputComponent
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters,confirm)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1677ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    filterDropdownProps: {
+      onOpenChange(open) {
+        if (open) {
+          setTimeout(() => searchInput.current?.select(), 100);
+        }
+      },
+    },
+    // render: (text) =>
+    //   searchedColumn === dataIndex ? (
+    //     <Highlighter
+    //       highlightStyle={{
+    //         backgroundColor: '#ffc069',
+    //         padding: 0,
+    //       }}
+    //       searchWords={[searchText]}
+    //       autoEscape
+    //       textToHighlight={text ? text.toString() : ''}
+    //     />
+    //   ) : (
+    //     text
+    //   ),
+  });
+
+/*--- Handle Column and Row of Table ---*/
+  //Column Processing
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      sorter: (a,b) => a.name.length - b.name.length,
+      ...getColumnSearchProps('name')
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      sorter: (a,b) => a.price - b.price,
+      filters: [
+        {
+          text: '> 500000',
+          value: '>',
+        },
+        {
+          text: '= 500000',
+          value : '='
+        },
+        {
+          text: '< 500000',
+          value: '<',
+        },
+      ],
+      onFilter: (value, record) => {
+        if(value === '>'){
+          return record.price > 500000;
+        } else if (value === '<'){
+          return record.price < 500000;
+        } else{
+          return record.price == 500000;
+        }
+        }
+    },
+    {
+      title: "Rating",
+      dataIndex: "rating",
+      sorter: (a,b) => a.rating - b.rating,
+      filters: [
+        {
+          text: '> 4.7',
+          value: '>',
+        },
+        {
+          text: '= 4.7',
+          value : '='
+        },
+        {
+          text: '< 4.7',
+          value: '<',
+        },
+      ],
+      onFilter: (value, record) => {
+        if(value === '>'){
+          return record.rating > 4.7;
+        } else if (value === '<'){
+          return record.rating < 4.7;
+        } else{
+          return record.rating == 4.7;
+        }
+        }
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      ...getColumnSearchProps('type')
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: renderAction,
+    },
+  ];
+
+  //Row data Processing
+  const dataTable =
+    products?.data?.length &&
+    products?.data?.map((product) => {
+      return { ...product, key: product._id }; // Duyệt qua mỗi phần tử trong mảng products, thêm vào dữ liệu mỗi phần tử này một thuộc tính key với giá trị của key
+      // tương đương _id của đối tượng đó ==> Tạo mảng mới và gán cho data
+    });
 
 
   /*--- Handle Effect ---*/
@@ -359,8 +514,8 @@ const handleDeleteProduct = () => {
 
   //Effect hiển thị dữ liệu vào form của drawer
   useEffect(() => {
-    form.setFieldsValue(stateDetailedProduct);
-  }, [form, stateDetailedProduct]);
+    formDrawer.setFieldsValue(stateDetailedProduct);
+  }, [formDrawer, stateDetailedProduct]);
 
   //Dùng effect sau khi chọn row
   useEffect(() => {
@@ -414,6 +569,7 @@ const handleDeleteProduct = () => {
       </div>
       <ModalComponent
         title="Tạo sản phẩm mới"
+        forceRender //Đối tượng này được hook ở trên trước khi các tp con của nó được tải => dùng để pre-render children
         open={isModalOpen}
         onCancel={handleCancel} //Vẫn phải giữ lại để thực hiện cancel thông qua ESC hoặc nút X
         footer={null}
@@ -565,6 +721,7 @@ const handleDeleteProduct = () => {
 
       <DrawerComponent
         title="Chi tiết sản phẩm"
+        forceRender //Đối tượng này được hook ở trên trước khi các tp con của nó được tải => dùng để pre-render children
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         width="70%"
@@ -577,7 +734,7 @@ const handleDeleteProduct = () => {
             style={{ maxWidth: 600 }} // Chiều rộng tối đa của form
             onFinish={onUpdateProduct} // Tự cấu hình hàm khi submit (POST để gửi form đến url backend)
             autoComplete="on" // Tắt tính năng autocomplete
-            form={form}
+            form={formDrawer}
           >
             {/* Name field */}
             <Form.Item
