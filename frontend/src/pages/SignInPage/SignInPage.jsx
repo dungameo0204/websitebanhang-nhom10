@@ -1,15 +1,16 @@
 import react from "react";
+import { WrapperTextLight } from "./style";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import InputForm from "../../components/InputForm/InputForm";
 import { WrapperContainerLeft, WrapperContainerRight } from "./style";
-import imageLogo from "../../assets/images/logo.png";
+import imageLogo from "../../assets/images/logo-login.png";
 import { Image } from "antd";
 
 const SignInPage = () => {
   return (
     <div
       style={{
-        dissplay: "flex",
+        display: "flex",
         alignItems: "center",
         justifyContent: "center",
         background: "rgba(0,0,0,0.53",
@@ -63,7 +64,7 @@ const SignInPage = () => {
           <Image
             src={imageLogo}
             preview={false}
-            alt="iamge-logo"
+            alt="image-logo"
             height="203px"
             width="203px"
           />

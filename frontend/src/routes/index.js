@@ -40,7 +40,7 @@ export const routes = [
   },
   {
     path: "/product-details",
-    page: ProductDetailsPage,
+    page: ProductDetailPage,
     isShowHeader: true,
   },
   {

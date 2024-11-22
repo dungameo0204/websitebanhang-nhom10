@@ -5,7 +5,7 @@ import imageProductSmall from "../../assets/images/test-small.webp";
 import {
   WrapperStyleImageSmall,
   WrapperStyleColImage,
-  WrapperstyleNameProduct,
+  WrapperStyleNameProduct,
   WrapperStyleTextSell,
   WrapperPriceProduct,
   WrapperPriceTextProduct,
@@ -76,9 +76,9 @@ const ProductDetailsComponent = () => {
         </Row>
       </Col>
       <Col span={14} style={{ paddingLeft: "10px" }}>
-        <WrapperstyleNameProduct>
+        <WrapperStyleNameProduct>
           Sách - Thám tử lừng danh Conan - Combo 10 tập từ tập 81 đến tập 90
-        </WrapperstyleNameProduct>
+        </WrapperStyleNameProduct>
         <div>
           <StarFilled
             style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}

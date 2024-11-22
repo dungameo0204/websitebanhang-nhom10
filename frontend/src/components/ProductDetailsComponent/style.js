@@ -1,5 +1,6 @@
 import { Col, Image } from "antd";
 import styled from "styled-components";
+import { InputNumber } from "antd";
 
 export const WrapperStyleImageSmall = styled(Image)`
   height: 64px;
@@ -11,7 +12,7 @@ export const WrapperStyleColImage = styled(Col)`
   display: flex;
 `;
 
-export const WrapperstyleNameProduct = styled.h1`
+export const WrapperStyleNameProduct = styled.h1`
   color: rgb(36, 36, 36);
   font-size: 24px;
   font-weight: 300;

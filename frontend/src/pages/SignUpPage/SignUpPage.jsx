@@ -6,13 +6,13 @@ import {
   WrapperContainerRight,
   WrapperTextLight,
 } from "./style";
-import imageLogo from "../../assets/images/logo.png";
+import imageLogo from "../../assets/images/logo-login.png";
 
 const SignUpPage = () => {
   return (
     <div
       style={{
-        dissplay: "flex",
+        display: "flex",
         alignItems: "center",
         justifyContent: "center",
         background: "rgba(0,0,0,0.53",
@@ -64,7 +64,7 @@ const SignUpPage = () => {
           <Image
             src={imageLogo}
             preview={false}
-            alt="iamge-logo"
+            alt="image-logo"
             height="203px"
             width="203px"
           />
