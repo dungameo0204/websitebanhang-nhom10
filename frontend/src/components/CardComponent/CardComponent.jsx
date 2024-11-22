@@ -4,7 +4,9 @@ import { AdsBadge, StyledTextBadge, StyleNameProduct, WrapperCardStyle, WrapperD
 import {
     StarFilled
 } from '@ant-design/icons';
-const CardComponent = () => {
+const CardComponent = (props) => {
+    const { countInStock, description, image, name, price, rating, type, discount, selled } = props
+
     return (
         <WrapperCardStyle
             hoverable
@@ -14,15 +16,15 @@ const CardComponent = () => {
         >
             <StyledTextBadge>11.11</StyledTextBadge>
             <AdsBadge>AD</AdsBadge>
-            <StyleNameProduct>Iphone</StyleNameProduct>
+            <StyleNameProduct>{name}</StyleNameProduct>
             <WrapperReporText>
                 <span>
-                    <span>4.96</span> <StarFilled style={{ fontSize: '12px', color: 'yellow' }} />
+                    <span>{rating}</span> <StarFilled style={{ fontSize: '12px', color: 'yellow' }} />
                 </span>
-                <span>| Da ban 1000+</span>
+                <span>| Da ban {selled || 1000}+</span>
             </WrapperReporText>
             <WrapperPriceText>
-                1.000.000d
+                <span style={{ marginRight: '8px' }}>{price}</span>
                 <WrapperDiscountText>
                     -5%
                 </WrapperDiscountText>
