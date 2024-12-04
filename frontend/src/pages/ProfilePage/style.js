@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { Upload } from 'antd';
 export const WrapperHeader = styled.h1`
   color: #000;
   font-size: 18px;

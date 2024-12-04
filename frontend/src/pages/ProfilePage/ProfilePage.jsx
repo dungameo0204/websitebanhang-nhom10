@@ -9,7 +9,7 @@ import { getBase64 } from '../../untils';
 //import as UserService from '../../services/UserService'
 //import * as message from '../../components/Message/Message'
 //import Loading from '../../components/LoadingComponent/Loading'
-//import {useMutationHooks} from '../../hooks/useMutationHook'
+//import { useMutationHooks } from '../../hooks/useMutationHook'
 
 
 const ProfilePage = () => {
