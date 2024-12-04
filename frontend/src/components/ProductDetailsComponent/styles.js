@@ -1,5 +1,6 @@
 import { Col, Image } from "antd";
 import styled from "styled-components";
+import { InputNumber } from "antd";
 
 export const WrapperStyleImageSmall = styled(Image)`
   height: 64px;
@@ -25,16 +26,16 @@ export const WrapperStyleTextSell = styled.span`
   color: rgb(120, 120, 120);
 `;
 
-export const WrapperPricceProduct = styled.div`
+export const WrapperPriceProduct = styled.div`
   background: rgb(250, 250, 250);
   border-radius: 4px;
 `;
 
-export const wrapperPriceTextProduct = styled.h1`
+export const WrapperPriceTextProduct = styled.h1`
   font-size: 32px;
-  font-weight: 500;
   line-height: 40px;
   margin-right: 8px;
+  font-weight: 500;
   padding: 10px;
   margin-top: 10px;
 `;
@@ -57,7 +58,7 @@ export const WrapperAddressProduct = styled.div`
   }
 `;
 
-export const WrapperQuantityProduct = styled.div`
+export const WrapperQualityProduct = styled.div`
   display: flex;
   gap: 4px;
   align-items: center;
@@ -72,7 +73,7 @@ export const WrapperInputNumber = styled(InputNumber)`
     border-top: none;
     border-bottom: none;
     &.ant-input-number-handler-wrap {
-      display: none;
+      display: none !important;
     }
   }
 `;
