@@ -1,19 +1,27 @@
-import react from "react";
+import React, { useState } from "react";
 import { WrapperTextLight } from "./style";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import InputForm from "../../components/InputForm/InputForm";
 import { WrapperContainerLeft, WrapperContainerRight } from "./style";
 import imageLogo from "../../assets/images/logo-login.png";
-import { Image } from "antd";
+import { Image as AntImage } from "antd"; // Đổi tên tránh xung đột
+import { useNavigate } from "react-router-dom";
 
 const SignInPage = () => {
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavigateSignUp = () => {
+    navigate("/signup");
+  };
+
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "rgba(0,0,0,0.53",
+        background: "rgba(0,0,0,0.53)",
         height: "100vh",
       }}
     >
@@ -28,7 +36,7 @@ const SignInPage = () => {
       >
         <WrapperContainerLeft>
           <h1>Xin chào</h1>
-          <p>Đăng nhập vào tạo tài khoản</p>
+          <p>Đăng nhập hoặc tạo tài khoản</p>
           <InputForm
             style={{ marginBottom: "10px" }}
             placeholder="abc@gmail.com"
@@ -51,22 +59,23 @@ const SignInPage = () => {
               fontSize: "15px",
               fontWeight: "700",
             }}
-          ></ButtonComponent>
+          />
           <p>
             <WrapperTextLight>Quên mật khẩu?</WrapperTextLight>
           </p>
           <p>
             Chưa có tài khoản?{" "}
-            <WrapperTextLight> Tạo tài khoản</WrapperTextLight>
+            <WrapperTextLight onClick={handleNavigateSignUp}>
+              Tạo tài khoản
+            </WrapperTextLight>
           </p>
         </WrapperContainerLeft>
         <WrapperContainerRight>
-          <Image
+          <AntImage
             src={imageLogo}
             preview={false}
             alt="image-logo"
-            height="203px"
-            width="203px"
+            style={{ height: "203px", width: "203px" }}
           />
           <h4>Mua sắm tại ...</h4>
         </WrapperContainerRight>

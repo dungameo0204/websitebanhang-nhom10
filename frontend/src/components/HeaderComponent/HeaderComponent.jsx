@@ -1,5 +1,6 @@
 import { Col, Flex, Row } from "antd";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   WrapperHeader,
   WrapperHeaderAccout,
@@ -15,6 +16,10 @@ import {
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 
 const HeaderComponent = () => {
+  const navigate = useNavigate();
+  const handleNavigateLogin = () => {
+    navigate("/signin");
+  };
   return (
     <div>
       <WrapperHeader gutter={16}>
@@ -36,7 +41,7 @@ const HeaderComponent = () => {
         >
           <WrapperHeaderAccout>
             <UserOutlined style={{ fontSize: "30px" }} />
-            <div>
+            <div onClick={handleNavigateLogin} style={{ cursor: "pointer" }}>
               <WrapperTextHeaderSmall>Đăng nhập/Đăng ký</WrapperTextHeaderSmall>
               <div>
                 <WrapperTextHeaderSmall>Tài khoản</WrapperTextHeaderSmall>
