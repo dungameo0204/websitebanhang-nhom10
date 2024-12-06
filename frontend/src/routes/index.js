@@ -3,6 +3,9 @@ import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import OderPage from "../pages/OderPage/OderPage";
 import ProductsPage from "../pages/ProductsPage/ProductsPage";
 import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
+import SignInPage from "../pages/SignInPage/SignInPage";
+import SignUpPage from "../pages/SignUpPage/SignUpPage";
+import AdminPage from "../pages/AdminPage/AdminPage";
 
 export const routes = [
     {
@@ -26,8 +29,22 @@ export const routes = [
         isShowHeader: true
     },
     {
+        path: '/sign-in',
+        page: SignInPage,
+        isShowHeader: false
+    },
+    {
+        path: '/sign-up',
+        page: SignUpPage,
+        isShowHeader: false
+    },
+    {
         path: '*',
         page: NotFoundPage
+    },
+    {
+        path: 'check',
+        page: AdminPage
     }
 
 ]
