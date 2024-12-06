@@ -4,10 +4,15 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
+    "@tanstack/react-query": "^5.59.20",
+    "@tanstack/react-query-devtools": "^5.59.20",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "antd": "^5.21.6",
+    "antd": "^5.22.0",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "postcss": "^8.4.48",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",
@@ -17,6 +22,9 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.13",
     "web-vitals": "^2.1.4"
+  },
+  "overrides": {
+    "nth-check": ">=2.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -41,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-private-property-in-object": "^7.25.9"
   }
 }

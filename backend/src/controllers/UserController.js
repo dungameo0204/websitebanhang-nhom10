@@ -5,8 +5,8 @@ const createUser = async (req,res) => {
     console.log(req.body);
 
     const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const {name, email, password, confirmPassword, phone} = req.body;
-      if (!name || !email || !password || !phone || !confirmPassword) {
+      const {email, password, confirmPassword} = req.body;
+      if (!email || !password || !confirmPassword ) {
         return res.status(200).json({error: 'All fields are required'});
       }
       if (!emailReg.test(req.body.email)) {
@@ -26,21 +26,23 @@ const createUser = async (req,res) => {
 
 const loginUser = async (req,res) => {
     try{
-    console.log(req.body);
 
     const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const {email, password} = req.body;
       if (!email || !password ) {
-        return res.status(200).json({error: 'All fields are required'});
+        console.log(email)
+        console.log(password)
+        return res.status(200).json({status: 'ERR',error: 'All fields are required'});
       }
       if (!emailReg.test(req.body.email)) {
-        return res.status(200).json({error: 'Invalid email format'});
+        return res.status(200).json({status: 'ERR',error: 'Invalid email format'});
       }
       
       const user= await userService.loginUser(req.body);
       return res.status(201).json({message: 'Login successfully', data: user});
     } catch (error) {
-        return res.status(404).json({error: error.message});
+        return res.status(404).json({status: 'ERR',error: error.message});
+        
     }
 };
 

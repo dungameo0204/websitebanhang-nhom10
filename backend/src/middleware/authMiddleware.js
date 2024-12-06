@@ -4,7 +4,12 @@ dotenv.config()
 
 
 const authMiddleware = (req, res, next) => {
-    const token = req.headers.token.split(' ')[1]; // Cấu trúc: Bearer fdfdf..... -> lấy token: fdfdf....
+    if(req.headers.token){
+        const token = req.headers.token.split(' ')[1]; // Cấu trúc: Bearer fdfdf..... -> lấy token: fdfdf....
+    }else{
+        return res.status(400).json({ message: 'no token - middleware' }); 
+    }
+    
 
     // Kiểm tra token khả thi?
     jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
