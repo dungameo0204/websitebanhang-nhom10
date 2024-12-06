@@ -198,11 +198,33 @@ const deleteProduct = (id) => {
     });
 }
 
+const deleteManyProduct = (ids) => { 
+    return new Promise(async (resolve, reject) => {
+        try {
+            await Product.deleteMany({
+                _id: { $in: ids }
+            })
+            resolve({
+                status: 'OK',
+                message: 'DELETE SUCCESSFULLY',
+            });
+
+        } catch (error) {
+            reject({
+                status: 'ERROR',
+                message: error.message || 'An error occurred when deleting product item from service'
+            });
+        }
+    });
+}
+
+
 
 module.exports = {
     createProduct,
     updateProduct,
     getDetailedProduct,
     getAllProduct,
-    deleteProduct
+    deleteProduct,
+    deleteManyProduct
 }

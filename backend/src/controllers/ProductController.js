@@ -119,12 +119,35 @@ const deleteProduct = async (req,res) => {
     }
 }
 
+const deleteManyProduct = async (req,res) => {
+    try{
+        const ids = req.body;
+        
+        if(!ids || ids.length === 0) {
+            return res.status(400).json({
+                status: 'ERROR',
+                message: 'ProductIds is required'
+            })
+        }
+
+        const response = await ProductService.deleteManyProduct(ids);
+
+        return res.status(200).json(response);
+    }catch (error){
+        return res.status(500).json({
+            status: 'ERROR',
+            message : error.message || 'An unexpected error occurred while deleting product'
+        })
+    }
+}
+
 module.exports = {
     createProduct,
     updateProduct,
     getDetailedProduct,
     getAllProduct,
-    deleteProduct
+    deleteProduct,
+    deleteManyProduct
 }
 
 
