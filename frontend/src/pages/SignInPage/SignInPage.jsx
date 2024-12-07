@@ -6,13 +6,28 @@ import { WrapperContainerLeft, WrapperContainerRight } from "./style";
 import imageLogo from "../../assets/images/logo-login.png";
 import { Image as AntImage } from "antd"; // Đổi tên tránh xung đột
 import { useNavigate } from "react-router-dom";
+import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleNavigateSignUp = () => {
     navigate("/signup");
+  };
+
+  const handleOnChangeEmail = (value) => {
+    setEmail(value);
+  };
+
+  const handleOnChangePassword = (value) => {
+    setPassword(value);
+  };
+
+  const handleSignIn = () => {
+    console.log("signin", email, password);
   };
 
   return (
@@ -40,9 +55,31 @@ const SignInPage = () => {
           <InputForm
             style={{ marginBottom: "10px" }}
             placeholder="abc@gmail.com"
+            value={email}
+            handleOnChange={handleOnChangeEmail}
           />
-          <InputForm placeholder="Mật khẩu" />
+          <div style={{ position: "relative" }}>
+            <span
+              onClick={() => setIsShowPassword(!isShowPassword)}
+              style={{
+                zIndex: "10",
+                position: "absolute",
+                top: "4px",
+                right: "8px",
+              }}
+            >
+              {isShowPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
+            </span>
+            <InputForm
+              placeholder="password"
+              type={isShowPassword ? "text" : "password"}
+              value={password}
+              handleOnChange={handleOnChangePassword}
+            />
+          </div>
           <ButtonComponent
+            disabled={!email.length || !password.length}
+            onClick={handleSignIn}
             bordered={false}
             size={40}
             styleButton={{
@@ -75,7 +112,7 @@ const SignInPage = () => {
             src={imageLogo}
             preview={false}
             alt="image-logo"
-            style={{ height: "203px", width: "203px" }}
+            style={{ height: "230px", width: "270px" }}
           />
           <h4>Mua sắm tại ...</h4>
         </WrapperContainerRight>

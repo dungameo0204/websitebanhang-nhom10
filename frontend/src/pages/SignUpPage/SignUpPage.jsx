@@ -15,9 +15,28 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleOnChangeEmail = (value) => {
+    setEmail(value);
+  };
+
+  const handleOnChangePassword = (value) => {
+    setPassword(value);
+  };
+
+  const handleOnChangeConfirmPassword = (value) => {
+    setConfirmPassword(value);
+  };
 
   const handleNavigateSignIn = () => {
     navigate("/signin");
+  };
+
+  const handleSignUp = () => {
+    console.log("signup", email, password, confirmPassword);
   };
 
   return (
@@ -45,46 +64,56 @@ const SignUpPage = () => {
           <InputForm
             style={{ marginBottom: "15px" }}
             placeholder="abc@gmail.com"
+            value={email}
+            handleOnChange={handleOnChangeEmail}
           />
-          <div style={{ position: "relative", marginBottom: "15px" }}>
-            <InputForm
-              type={isShowPassword ? "text" : "password"} // Toggle giữa text và password
-              placeholder="Mật khẩu"
-            />
+          <div style={{ position: "relative" }}>
             <span
-              style={{
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-                color: "#999",
-              }}
               onClick={() => setIsShowPassword(!isShowPassword)}
+              style={{
+                zIndex: "10",
+                position: "absolute",
+                top: "4px",
+                right: "8px",
+              }}
             >
               {isShowPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
             </span>
-          </div>
-          <div style={{ position: "relative", marginBottom: "26px" }}>
             <InputForm
-              type={isShowConfirmPassword ? "text" : "password"} // Toggle giữa text và password
-              placeholder="Nhập lại mật khẩu"
+              placeholder="password"
+              style={{ marginBottom: "10px" }}
+              type={isShowPassword ? "text" : "password"}
+              value={password}
+              handleOnChange={handleOnChangePassword}
             />
+          </div>
+          <div style={{ position: "relative" }}>
             <span
-              style={{
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-                color: "#999",
-              }}
               onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
+              style={{
+                zIndex: "10",
+                position: "absolute",
+                top: "4px",
+                right: "8px",
+              }}
             >
               {isShowConfirmPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
             </span>
           </div>
+          <div style={{ position: "relative", marginBottom: "26px" }}>
+            <InputForm
+              placeholder="confirm password"
+              type={isShowConfirmPassword ? "text" : "password"}
+              style={{ marginBottom: "10px" }}
+              value={confirmPassword}
+              handleOnChange={handleOnChangeConfirmPassword}
+            />
+          </div>
           <ButtonComponent
+            disabled={
+              !email.length || !password.length || !confirmPassword.length
+            }
+            onClick={handleSignUp}
             bordered={false}
             size={40}
             styleButton={{
@@ -115,8 +144,8 @@ const SignUpPage = () => {
             src={imageLogo}
             preview={false}
             alt="image-logo"
-            height="203px"
-            width="203px"
+            height="230px"
+            width="270px"
           />
           <h4>Mua sắm tại ...</h4>
         </WrapperContainerRight>
