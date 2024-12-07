@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { AdsBadge, StyledTextBadge, StyleNameProduct, WrapperCardStyle, WrapperDiscountText, WrapperPriceText, WrapperReporText } from './style'
+import { AdsBadge, StyledTextBadge, StyleNameProduct, WrapperCardStyle, WrapperDiscountText, WrapperPriceText, WrapperReportText } from './style'
 import {
     StarFilled
 } from '@ant-design/icons';
@@ -17,12 +17,12 @@ const CardComponent = (props) => {
             <StyledTextBadge>11.11</StyledTextBadge>
             <AdsBadge>AD</AdsBadge>
             <StyleNameProduct>{name}</StyleNameProduct>
-            <WrapperReporText>
+            <WrapperReportText>
                 <span>
                     <span>{rating}</span> <StarFilled style={{ fontSize: '12px', color: 'yellow' }} />
                 </span>
                 <span>| Da ban {selled || 1000}+</span>
-            </WrapperReporText>
+            </WrapperReportText>
             <WrapperPriceText>
                 <span style={{ marginRight: '8px' }}>{price}</span>
                 <WrapperDiscountText>

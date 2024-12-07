@@ -6,10 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons'
 import { getBase64 } from '../../untils';
-//import as UserService from '../../services/UserService'
-//import * as message from '../../components/Message/Message'
-//import Loading from '../../components/LoadingComponent/Loading'
-//import { useMutationHooks } from '../../hooks/useMutationHook'
+import { updateUser, getDetailsUser } from '../../services/UserService';
+import * as message from '../../components/Message/Message'
+import Loading from '../../components/LoadingComponent/Loading'
+import { useMutationHooks } from '../../hooks/useMutationHook'
 
 
 const ProfilePage = () => {
@@ -24,7 +24,7 @@ const ProfilePage = () => {
     const mutation = useMutationHooks(
         (data) => {
             const { id, access_token, ...rests } = data
-            UserService.updateUser(id, rests, access_token)
+            updateUser(id, rests, access_token)
         }
     )
     const dispatch = useDispatch()
@@ -47,7 +47,7 @@ const ProfilePage = () => {
     }, [isSuccess, isError])
 
     const handleGetDetailsUser = async (id, token) => {
-        const res = await UserService.getDetailsUser(id, token)
+        const res = await getDetailsUser(id, token)
         dispatch(updateUser({ ...res?.data, access_token: token }))
         // updateUser này là của redux (import cái rudex)
     }

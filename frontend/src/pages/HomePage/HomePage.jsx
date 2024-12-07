@@ -6,6 +6,8 @@ import slider1 from "../../assets/images/slider1.webp";
 import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
 import CardComponent from "../../components/CardComponent/CardComponent";
+import { useQuery } from '@tanstack/react-query';
+import {getAllProduct} from "../../services/ProductService"
 import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { Color } from "antd/es/color-picker";
@@ -14,12 +16,16 @@ import { Col } from "antd";
 const HomePage = () => {
     const arr = ["TV", "Tủ lạnh", "Laptop"];
     const fetchProductAll = async () => {
-        const res = await ProductService.getAllProduct()
+        const res = await getAllProduct()
 
         return res
     }
-    const { isLoading, data: products } = useQuery(['product'], fetchProductAll, { retry: 3, retryDelay: 1000 })
-    console.log('data', products);
+    const { isLoading, data: products } = useQuery({
+        queryKey: ['product'],
+        queryFn: fetchProductAll,
+        retry: 3,
+        retryDelay: 1000
+      })
     return (
         <>
             <div style={{ padding: "0 120px" }}>
