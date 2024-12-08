@@ -65,7 +65,7 @@ const SignUpPage = () => {
             style={{ marginBottom: "15px" }}
             placeholder="abc@gmail.com"
             value={email}
-            handleOnChange={handleOnChangeEmail}
+            OnChange={handleOnChangeEmail}
           />
           <div style={{ position: "relative" }}>
             <span
@@ -84,7 +84,7 @@ const SignUpPage = () => {
               style={{ marginBottom: "10px" }}
               type={isShowPassword ? "text" : "password"}
               value={password}
-              handleOnChange={handleOnChangePassword}
+              OnChange={handleOnChangePassword}
             />
           </div>
           <div style={{ position: "relative" }}>
@@ -106,7 +106,7 @@ const SignUpPage = () => {
               type={isShowConfirmPassword ? "text" : "password"}
               style={{ marginBottom: "10px" }}
               value={confirmPassword}
-              handleOnChange={handleOnChangeConfirmPassword}
+              OnChange={handleOnChangeConfirmPassword}
             />
           </div>
           <ButtonComponent
@@ -114,7 +114,6 @@ const SignUpPage = () => {
               !email.length || !password.length || !confirmPassword.length
             }
             onClick={handleSignUp}
-            bordered={false}
             size={40}
             styleButton={{
               background: "rgb(255, 57, 69)",

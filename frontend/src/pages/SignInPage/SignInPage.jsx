@@ -56,7 +56,7 @@ const SignInPage = () => {
             style={{ marginBottom: "10px" }}
             placeholder="abc@gmail.com"
             value={email}
-            handleOnChange={handleOnChangeEmail}
+            OnChange={handleOnChangeEmail}
           />
           <div style={{ position: "relative" }}>
             <span
@@ -74,13 +74,12 @@ const SignInPage = () => {
               placeholder="password"
               type={isShowPassword ? "text" : "password"}
               value={password}
-              handleOnChange={handleOnChangePassword}
+              OnChange={handleOnChangePassword}
             />
           </div>
           <ButtonComponent
             disabled={!email.length || !password.length}
             onClick={handleSignIn}
-            bordered={false}
             size={40}
             styleButton={{
               background: "rgb(255, 57, 69)",
