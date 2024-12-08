@@ -120,7 +120,9 @@ const getAllProduct = (page, limit, sortParams,filterParams) => {
             if(filterParams){
                 for (let i=0; i<filterParams.length;i+=2){ //do mảng filterParams sẽ có dạng: [name, test] -> filterParams[0]=name; filterParams[1]=test;
                     let key = filterParams[i];
-                    let value = filterParams[i+1].replace(/\s+/g, '');//bỏ khoảng trắng
+                    let value = filterParams[i+1].replace(/_/g, " "); //chuyển gạch dưới thành khoảng trắng  (đồ_ăn -> đồ ăn)
+
+                    console.log(value)
                     filter[key] = { $regex: value, $options: 'i' }; //không phân biệt chữ hoa, chữ thường
                 }
 
@@ -156,6 +158,39 @@ const getAllProduct = (page, limit, sortParams,filterParams) => {
                     sortBy: field || "khong sort",
                     sortOrder: order || "khong sort"
                 }
+            });
+
+        } catch (error) {
+            reject({
+                status: 'ERROR',
+                message: error.message || 'An error occurred when getting product item from service'
+            });
+        }
+    });
+}
+
+const getAllType = () => { 
+    return new Promise(async (resolve, reject) => {
+        try {
+            
+            const allType = await Product.distinct('type')
+           
+
+            
+
+            // Nếu DB sản phẩm rỗng
+            if (allType.length === 0) {
+                reject({
+                    status: 'ERROR',
+                    message: "No product type found"
+                });
+            }
+
+            // Nếu có sản phẩm trong DB
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: allType,
             });
 
         } catch (error) {
@@ -224,6 +259,7 @@ module.exports = {
     createProduct,
     updateProduct,
     getDetailedProduct,
+    getAllType,
     getAllProduct,
     deleteProduct,
     deleteManyProduct
