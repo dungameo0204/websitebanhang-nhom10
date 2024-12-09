@@ -104,8 +104,16 @@ const getAllProduct = (page, limit, sortParams,filterParams) => {
         try {
             // Bỏ qua các sản phẩm đã hiển thị trước đó
             const skip = (page - 1) * limit;
-            let totalProductCount = await Product.countDocuments(); // Khai báo biến totalProductCount
-            const totalPages = Math.ceil(totalProductCount / limit);
+
+            //Xử lý filter:
+            let filter = {};
+            if(filterParams){
+                for (let i=0; i<filterParams.length;i+=2){ //do mảng filterParams sẽ có dạng: [name, test] -> filterParams[0]=name; filterParams[1]=test;
+                    let key = filterParams[i];
+                    let value = filterParams[i+1].replace(/_/g, " "); //chuyển gạch dưới thành khoảng trắng  (đồ_ăn -> đồ ăn)
+                    filter[key] = { $regex: value, $options: 'i' }; //không phân biệt chữ hoa, chữ thường
+                }        
+            }
 
             //Xử lý sort
             let sort = {};
@@ -114,28 +122,17 @@ const getAllProduct = (page, limit, sortParams,filterParams) => {
             [field, order] = sortParams.split(','); // sort=name,asc --> [name, asc]
             sort[field] = order === 'desc' ? -1 : 1; // 1 cho 'asc', -1 cho 'desc'
             }
-
-            //Xử lý filter:
-            let filter = {};
-            if(filterParams){
-                for (let i=0; i<filterParams.length;i+=2){ //do mảng filterParams sẽ có dạng: [name, test] -> filterParams[0]=name; filterParams[1]=test;
-                    let key = filterParams[i];
-                    let value = filterParams[i+1].replace(/_/g, " "); //chuyển gạch dưới thành khoảng trắng  (đồ_ăn -> đồ ăn)
-
-                    console.log(value)
-                    filter[key] = { $regex: value, $options: 'i' }; //không phân biệt chữ hoa, chữ thường
-                }
-
-                
-            }
             
-            
+
+            //Tính số lượng sản phẩm đạt yêu cầu trong cơ sở dữ liệu
+            let totalProductCount = await Product.countDocuments(filter); // Khai báo biến totalProductCount
+
+            //Số page dựa trên số lượng sản phẩm đã tìm được
+            const totalPages = Math.ceil(totalProductCount / limit);
  
             // Tìm toàn bộ sản phẩm cho trang hiện tại
             const allProduct = await Product.find(filter).skip(skip).limit(limit).sort(sort);
            
-
-            
 
             // Nếu DB sản phẩm rỗng
             if (allProduct.length === 0) {
