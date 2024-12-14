@@ -23,6 +23,8 @@ const SignUpPage = () => {
     setEmail(value);
   };
 
+  const mutation = useMutationHook((data) => UserService.signupUser(data));
+
   const handleOnChangePassword = (value) => {
     setPassword(value);
   };
@@ -32,11 +34,11 @@ const SignUpPage = () => {
   };
 
   const handleNavigateSignIn = () => {
-    navigate("/signin");
+    navigate("/sign-in");
   };
 
   const handleSignUp = () => {
-    console.log("signup", email, password, confirmPassword);
+    console.log("sign-up", email, password, confirmPassword);
   };
 
   return (
@@ -109,27 +111,30 @@ const SignUpPage = () => {
               OnChange={handleOnChangeConfirmPassword}
             />
           </div>
-          <ButtonComponent
-            disabled={
-              !email.length || !password.length || !confirmPassword.length
-            }
-            onClick={handleSignUp}
-            size={40}
-            styleButton={{
-              background: "rgb(255, 57, 69)",
-              height: "48px",
-              width: "100%",
-              borderRadius: "4px",
-              border: "none",
-              margin: "26px 0 10px",
-            }}
-            textButton={"Đăng ký"}
-            styleTextButton={{
-              color: "#fff",
-              fontSize: "15px",
-              fontWeight: "700",
-            }}
-          />
+          {data?.status === "ERR" && <span>{data?.message}</span>}
+          <Loading isLoading={isLoading}>
+            <ButtonComponent
+              disabled={
+                !email.length || !password.length || !confirmPassword.length
+              }
+              onClick={handleSignUp}
+              size={40}
+              styleButton={{
+                background: "rgb(255, 57, 69)",
+                height: "48px",
+                width: "100%",
+                borderRadius: "4px",
+                border: "none",
+                margin: "26px 0 10px",
+              }}
+              textButton={"Đăng ký"}
+              styleTextButton={{
+                color: "#fff",
+                fontSize: "15px",
+                fontWeight: "700",
+              }}
+            ></ButtonComponent>
+          </Loading>
           <p>
             Bạn đã có tài khoản?
             <WrapperTextLight onClick={handleNavigateSignIn}>

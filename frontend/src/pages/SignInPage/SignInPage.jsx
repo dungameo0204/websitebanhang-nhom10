@@ -7,6 +7,8 @@ import imageLogo from "../../assets/images/logo-login.png";
 import { Image as AntImage } from "antd"; // Đổi tên tránh xung đột
 import { useNavigate } from "react-router-dom";
 import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons";
+import * as UserService from "../../services/UserService";
+import { useMutation } from "@tanstack/react-query";
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -14,9 +16,15 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const mutation = useMutation({
+    mutationFn: (data) => UserService.loginUser(data),
+  });
+
   const handleNavigateSignUp = () => {
-    navigate("/signup");
+    navigate("/sign-up");
   };
+
+  console.log("mutation", mutation);
 
   const handleOnChangeEmail = (value) => {
     setEmail(value);
@@ -27,7 +35,8 @@ const SignInPage = () => {
   };
 
   const handleSignIn = () => {
-    console.log("signin", email, password);
+    mutation.mutate({ email, password });
+    console.log("sign-in", email, password);
   };
 
   return (
