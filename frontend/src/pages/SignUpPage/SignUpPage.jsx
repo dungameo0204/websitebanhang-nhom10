@@ -23,8 +23,6 @@ const SignUpPage = () => {
     setEmail(value);
   };
 
-  const mutation = useMutationHook((data) => UserService.signupUser(data));
-
   const handleOnChangePassword = (value) => {
     setPassword(value);
   };
@@ -34,11 +32,11 @@ const SignUpPage = () => {
   };
 
   const handleNavigateSignIn = () => {
-    navigate("/sign-in");
+    navigate("/signin");
   };
 
   const handleSignUp = () => {
-    console.log("sign-up", email, password, confirmPassword);
+    console.log("signup", email, password, confirmPassword);
   };
 
   return (
@@ -67,7 +65,7 @@ const SignUpPage = () => {
             style={{ marginBottom: "15px" }}
             placeholder="abc@gmail.com"
             value={email}
-            OnChange={handleOnChangeEmail}
+            handleOnChange={handleOnChangeEmail}
           />
           <div style={{ position: "relative" }}>
             <span
@@ -86,7 +84,7 @@ const SignUpPage = () => {
               style={{ marginBottom: "10px" }}
               type={isShowPassword ? "text" : "password"}
               value={password}
-              OnChange={handleOnChangePassword}
+              handleOnChange={handleOnChangePassword}
             />
           </div>
           <div style={{ position: "relative" }}>
@@ -108,33 +106,31 @@ const SignUpPage = () => {
               type={isShowConfirmPassword ? "text" : "password"}
               style={{ marginBottom: "10px" }}
               value={confirmPassword}
-              OnChange={handleOnChangeConfirmPassword}
+              handleOnChange={handleOnChangeConfirmPassword}
             />
           </div>
-          {data?.status === "ERR" && <span>{data?.message}</span>}
-          <Loading isLoading={isLoading}>
-            <ButtonComponent
-              disabled={
-                !email.length || !password.length || !confirmPassword.length
-              }
-              onClick={handleSignUp}
-              size={40}
-              styleButton={{
-                background: "rgb(255, 57, 69)",
-                height: "48px",
-                width: "100%",
-                borderRadius: "4px",
-                border: "none",
-                margin: "26px 0 10px",
-              }}
-              textButton={"Đăng ký"}
-              styleTextButton={{
-                color: "#fff",
-                fontSize: "15px",
-                fontWeight: "700",
-              }}
-            ></ButtonComponent>
-          </Loading>
+          <ButtonComponent
+            disabled={
+              !email.length || !password.length || !confirmPassword.length
+            }
+            onClick={handleSignUp}
+            bordered={false}
+            size={40}
+            styleButton={{
+              background: "rgb(255, 57, 69)",
+              height: "48px",
+              width: "100%",
+              borderRadius: "4px",
+              border: "none",
+              margin: "26px 0 10px",
+            }}
+            textButton={"Đăng ký"}
+            styleTextButton={{
+              color: "#fff",
+              fontSize: "15px",
+              fontWeight: "700",
+            }}
+          />
           <p>
             Bạn đã có tài khoản?
             <WrapperTextLight onClick={handleNavigateSignIn}>
