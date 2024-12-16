@@ -21,7 +21,7 @@ const AdminPage = () => {
                     <AdminUser />
                 )
 
-            case 'user':
+            case 'product':
                 return (
                     <AdminProduct />
                 )
@@ -51,8 +51,7 @@ const AdminPage = () => {
                     onClick={handleOnclick}
                 />
                 <div style={{ flex: 1, padding: '15px' }}>
-                    {/* {keySelected === '6' && <span>Key la 6</span>} */}
-                    <span>test</span>
+                    {renderPage(keySelected)}
                 </div>
             </div>
         </>
