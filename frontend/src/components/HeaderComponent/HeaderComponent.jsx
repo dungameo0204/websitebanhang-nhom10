@@ -20,6 +20,11 @@ const HeaderComponent = () => {
   const handleNavigateLogin = () => {
     navigate("/signin");
   };
+
+  const handleLogout = async () => {
+    setLoading(true)
+    await UserService.logoutUser
+  }
   return (
     <div>
       <WrapperHeader gutter={16}>
@@ -32,7 +37,7 @@ const HeaderComponent = () => {
             textButton="Tìm kiếm"
             placeholder="input search text"
 
-            //onSearch={onSearch}
+          //onSearch={onSearch}
           />
         </Col>
         <Col

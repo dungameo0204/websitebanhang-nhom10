@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Menu } from 'antd'
 import { getItem } from '../../untils';
 import { UserOutlined, AppstoreOutlined } from '@ant-design/icons'
+import HeaderComponent from '../../components/HeaderComponent/HeaderComponent';
 
 const AdminPage = () => {
     const items = [
@@ -36,22 +37,26 @@ const AdminPage = () => {
     }
 
     return (
-        <div style={{ display: 'flex' }}>
-            <Menu
-                mode="inline"
-                openKeys={openKeys}
-                onOpenChange={onOpenChange}
-                style={{
-                    width: 256,
-                }}
-                items={items}
-                onClick={handleOnclick}
-            />
-            <div style={{ flex: 1 }}>
-                {keySelected === '6' && <span>Key la 6</span>}
-                <span>test</span>
+        <>
+            <HeaderComponent />
+            <div style={{ display: 'flex' }}>
+                <Menu
+                    mode="inline"
+                    openKeys={openKeys}
+                    onOpenChange={onOpenChange}
+                    style={{
+                        width: 256,
+                    }}
+                    items={items}
+                    onClick={handleOnclick}
+                />
+                <div style={{ flex: 1 }}>
+                    {keySelected === '6' && <span>Key la 6</span>}
+                    <span>test</span>
+                </div>
             </div>
-        </div>
+        </>
+
 
     )
 }
