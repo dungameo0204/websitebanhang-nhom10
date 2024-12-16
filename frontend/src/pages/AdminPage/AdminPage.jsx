@@ -19,12 +19,29 @@ const AdminPage = () => {
   const [openKeys, setOpenKeys] = useState("user");
   const [keySelected, setKeySelected] = useState("");
 
+<<<<<<< HEAD
   const onOpenChange = (keys) => {
     const lastestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (rootSubmenuKeys.indexOf(lastestOpenKey) === -1) {
       setOpenKeys(keys);
     } else {
       setOpenKeys(lastestOpenKey ? [lastestOpenKey] : []);
+=======
+    const renderPage = (key) => {
+        switch (key) {
+            case 'user':
+                return (
+                    <AdminUser />
+                )
+
+            case 'product':
+                return (
+                    <AdminProduct />
+                )
+            default:
+                return <></>
+        }
+>>>>>>> 05935e58035916abb951a1263c44a139b62d416d
     }
   };
 
@@ -63,4 +80,22 @@ const AdminPage = () => {
   );
 };
 
+<<<<<<< HEAD
 export default AdminPage;
+=======
+                    }}
+                    items={items}
+                    onClick={handleOnclick}
+                />
+                <div style={{ flex: 1, padding: '15px' }}>
+                    {renderPage(keySelected)}
+                </div>
+            </div>
+        </>
+
+
+    )
+}
+
+export default AdminPage
+>>>>>>> 05935e58035916abb951a1263c44a139b62d416d
