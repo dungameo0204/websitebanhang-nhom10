@@ -5,8 +5,7 @@ const { generateAccessToken, generateRefreshToken} = require('./JwtService');
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {
         const {name, email, password, phone} = newUser;
-        try{
-            
+        try{     
             const checkUser = await User.findOne({email});
             if (checkUser) {
                 return reject({message: 'User already exists'});
@@ -14,13 +13,18 @@ const createUser = (newUser) => {
             const hashedPassword = await bcrypt.hash(password, 10);
             
             const createdUser = await User.create({
-                name, email, 
+                name,
+                email, 
                 password: hashedPassword,
                 phone,
             });
 
             if (createdUser) {
-                resolve(createdUser);
+                resolve({
+                    status: 'OK',
+                    data: createdUser
+
+                });
             }
         } catch (error) {
             reject(error);
@@ -36,12 +40,12 @@ const loginUser = (userLogin) => {
             
             const checkUser = await User.findOne({email});
             if (!checkUser) {
-                return reject({message: 'the User does not exist'});
+                return reject({message: 'The User does not exist'});
             }
-            const comparePassword = bcrypt.compareSync(password, checkUser.password); 
+            const comparePassword = bcrypt.compare(password, checkUser.password); 
 
             if (!comparePassword) {
-                return reject({message: 'Invalid password'});
+                return reject({message: 'The User or Password is incorrect'});
             }
             const refresh_token = generateRefreshToken({
                 id: checkUser._id,
@@ -53,7 +57,10 @@ const loginUser = (userLogin) => {
                 isAdmin: checkUser.isAdmin
             })
 
-            resolve({access_token, refresh_token});
+            resolve({
+                access_token,
+                refresh_token
+            });
 
         } catch (error) {
             reject(error);
