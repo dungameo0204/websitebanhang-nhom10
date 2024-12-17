@@ -40,41 +40,35 @@ export const createProduct = async (data) => {
 
 
 
+export const updateProduct = async (id, access_token, data) => {
+    const res = await axios.put(`${process.env.REACT_APP_API_URL}/product/update/${id}`, data,{
+        headers: {
+            token: `Bearer ${access_token}`
+        }
+    });
+    return res.data;
+}
 
-/*----- Lưu ý -------*/
-// Hiện tại, chưa có hàm xử lý token cho user đằng trước, do đó nên các hàm sau sẽ được khởi tạo chuyển lại khi đã có func đầy đủ.
-// Các func dưới sẽ được xoá/ chuyển về dạng code khi xử lý hoàn tất
 
-// 1.
-// export const updateProduct = async (id, access_token, data) => {
-//     const res = await axios.delete(`${process.env.REACT_APP_API_URL}/product/update/${id}`, data,{
-//         headers: {
-//             token: `Bearer ${access_token}`
-//         }
-//     });
+export const deleteProduct = async (id, access_token) => {
+        const res = await axios.delete(`${process.env.REACT_APP_API_URL}/product/delete/${id}` , {
+            headers: {
+                token: `Bearer ${access_token}`
+            }
+        });
+        return res.data;
+}
+
+
+// export const updateProduct = async (id, data) => {
+//     const res = await axios.put(`${process.env.REACT_APP_API_URL}/product/update/${id}`,data);
 //     return res.data;
 // }
-//
-// 2.
-// export const deleteProduct = async (id, access_token) => {
-//         const res = await axios.put(`${process.env.REACT_APP_API_URL}/product/delete/${id}` , {
-//             headers: {
-//                 token: `Bearer ${access_token}`
-//             }
-//         });
-//         return res.data;
-//     }
-//
 
-export const updateProduct = async (id, data) => {
-    const res = await axios.put(`${process.env.REACT_APP_API_URL}/product/update/${id}`,data);
-    return res.data;
-}
-
-export const deleteProduct = async (id) => {
-    const res = await axios.delete(`${process.env.REACT_APP_API_URL}/product/delete/${id}`);
-    return res.data;
-}
+// export const deleteProduct = async (id) => {
+//     const res = await axios.delete(`${process.env.REACT_APP_API_URL}/product/delete/${id}`);
+//     return res.data;
+// }
 
 // export const deleteManyProduct = async (data, access_token,) => {
 //     const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/product/delete-many`, data, {

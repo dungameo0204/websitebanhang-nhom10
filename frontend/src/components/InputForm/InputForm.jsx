@@ -4,12 +4,12 @@ import { WrapperInputStyle } from "./style";
 const InputForm = (props) => {
   const { placeholder = "Nhập text", ...rest } = props;
   const handleOnChangeInput = (e) => {
-    props.OnChange(e.target.value);
+    props.handleOnChange(e.target.value);
   };
   return (
     <WrapperInputStyle
       placeholder={placeholder}
-      value={props.value}
+      valueInput={props.value}
       {...rest}
       onChange={handleOnChangeInput}
     ></WrapperInputStyle>
