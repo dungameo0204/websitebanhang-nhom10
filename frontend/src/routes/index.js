@@ -44,13 +44,13 @@ export const routes = [
   {
     path: "/profile-user",
     page: ProfilePage,
-    isShowHeader: true
+    isShowHeader: true,
   },
   {
     path: "/system/admin",
     page: AdminPage,
     isShowHeader: false,
-    isPrivate: true
+    isPrivate: true,
   },
   {
     path: "/product-details",
