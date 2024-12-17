@@ -22,31 +22,34 @@ const createUser = async (req, res) => {
       .status(201)
       .json({ message: "User created successfully", data: user });
   } catch (error) {
-    return res.status(404).json({ error: error.message });
+    return res.status(404).json({ message: error.message });
   }
 };
 
 const loginUser = async (req, res) => {
   try {
-    const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const { email, password } = req.body;
+    const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (!email || !password) {
-      console.log(email);
-      console.log(password);
-      return res
-        .status(200)
-        .json({ status: "ERR", error: "All fields are required" });
-    }
-    if (!emailReg.test(req.body.email)) {
-      return res
-        .status(200)
-        .json({ status: "ERR", error: "Invalid email format" });
+      return res.status(400).json({ message: "All fields are required" });
+    } else if (!emailReg.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
     }
 
-    const user = await userService.loginUser(req.body);
-    return res.status(201).json({ message: "Login successfully", data: user });
+    const response = await userService.loginUser(req.body);
+    const { refresh_token, ...newResponse } = response;
+
+    res.cookie("refresh_token", refresh_token);
+
+    return res.status(201).json(newResponse);
   } catch (error) {
-    return res.status(404).json({ status: "ERR", error: error.message });
+    if (error.message === "The User does not exist") {
+      return res.status(404).json({ message: error.message });
+    } else if (error.message === "The User or Password is incorrect") {
+      return res.status(401).json({ message: error.message });
+    }
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -107,19 +110,17 @@ const getAllUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const token = req.headers.token.split(" ")[1];
+    const token = req.cookies.refresh_token;
+
     if (!token) {
       return res.status(404).json({ error: "The token is required" });
     }
 
-    const respond = await JwtService.refreshTokenJwtService(token);
+    const response = await JwtService.refreshTokenJwtService(token);
 
-    return res.status(201).json(respond);
+    return res.status(201).json(response);
   } catch (error) {
-    console.log(error);
-    return res
-      .status(404)
-      .json({ error: error.message, message: "wrong here" });
+    return res.status(404).json({ message: error.message || error });
   }
 };
 
