@@ -30,10 +30,6 @@ const SignInPage = () => {
   const {data, error, isPending, isSuccess, isError} = mutation
 
 
-  const mutation = useMutation({
-    mutationFn: (data) => UserService.loginUser(data),
-  });
-
   const handleNavigateSignUp = () => {
     navigate("/sign-up");
   };
