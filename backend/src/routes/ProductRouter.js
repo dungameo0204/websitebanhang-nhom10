@@ -7,7 +7,7 @@ const { authMiddleware } = require('../middleware/authMiddleware');
 
 
 router.post('/create', productController.createProduct);// Thêm middleware authe sau khi FE có xử lý token
-router.put('/update/:id', productController.updateProduct); // Thêm middleware authe sau khi FE có xử lý token
+router.put('/update/:id', authMiddleware, productController.updateProduct); // Thêm middleware authe sau khi FE có xử lý token
 router.get('/detail/:id', productController.getDetailedProduct);
 router.get('/get-all',productController.getAllProduct);
 router.delete('/delete/:id',authMiddleware, productController.deleteProduct); // Thêm middleware authe sau khi FE có xử lý token

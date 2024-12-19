@@ -5,7 +5,7 @@ import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons'
-import { getBase64 } from '../../untils';
+import { getBase64 } from '../../utils';
 import { updateUser, getDetailsUser } from '../../services/UserService';
 import * as message from '../../components/Message/Message'
 import Loading from '../../components/LoadingComponent/Loading'

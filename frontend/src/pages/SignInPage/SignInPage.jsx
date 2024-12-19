@@ -69,7 +69,6 @@ const SignInPage = () => {
       if(isSuccess){
         handleNavigateHomePage()
         saveTokenInLocalStorage('access_token', data?.access_token)
-
         if(data?.access_token) {
           const decoded = jwtDecode(data?.access_token);
           if(decoded?.id){

@@ -84,7 +84,7 @@ const updateUser = (id, data) => {
             return resolve(updatedUser);
 
         } catch (error) {
-            console.log("sercive",error);
+            console.log("service",error);
             reject(error);
         }
     }   

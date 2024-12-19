@@ -1,20 +1,17 @@
 const userService = require("../services/UserService");
 const JwtService = require("../services/JwtService");
-
 const createUser = async (req, res) => {
   try {
-    console.log(req.body);
-
     const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const { email, password, confirmPassword } = req.body;
     if (!email || !password || !confirmPassword) {
-      return res.status(200).json({ error: "All fields are required" });
+      return res.status(400).json({ message: "All fields are required" });
     }
     if (!emailReg.test(req.body.email)) {
-      return res.status(200).json({ error: "Invalid email format" });
+      return res.status(400).json({ message: "Invalid email format" });
     }
     if (confirmPassword !== password) {
-      return res.status(200).json({ error: "Passwords do not match" });
+      return res.status(400).json({ message: "Passwords do not match" });
     }
 
     const user = await userService.createUser(req.body);
@@ -32,24 +29,54 @@ const loginUser = async (req, res) => {
     const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    } else if (!emailReg.test(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res
+        .status(400)
+        .json({ message: "All fields are required" });
+    } 
+    else if (!emailReg.test(email)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid email format" });
     }
 
     const response = await userService.loginUser(req.body);
-    const { refresh_token, ...newResponse } = response;
+    const {refresh_token, ...newResponse} = response
 
-    res.cookie("refresh_token", refresh_token);
+    res.cookie('refresh_token', refresh_token, { //Chuyển secure true khi deploy
+      httpOnly: true,
+      secure: false,
+      sameSite: 'Lax'
+    });
 
     return res.status(201).json(newResponse);
+
   } catch (error) {
-    if (error.message === "The User does not exist") {
-      return res.status(404).json({ message: error.message });
-    } else if (error.message === "The User or Password is incorrect") {
-      return res.status(401).json({ message: error.message });
+    if(error.message === 'The User does not exist'){
+      return res.status(404).json({message : error.message});
     }
-    return res.status(500).json({ message: error.message });
+    else if(error.message === 'The User or Password is incorrect'){
+      return res.status(401).json({message : error.message});
+    }
+    return res.status(500).json({message : error.message});
+  }
+};
+
+const logoutUser = async (req, res) => {
+  try {
+    //xoá cookie
+    res.clearCookie('refresh_token', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'Lax'
+  });
+    return res.status(200).json({
+      status: 'OK',
+      message: 'Logout Succesfully'
+    })
+  } catch (error) {
+    return res
+      .status(500)
+      .json({message : error.message || error});
   }
 };
 
@@ -110,17 +137,19 @@ const getAllUser = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const token = req.cookies.refresh_token;
-
+    
+    const token = req.cookies.refresh_token
     if (!token) {
-      return res.status(404).json({ error: "The token is required" });
+      return res.status(404).json({ error: "Refresh token is required" });
     }
 
     const response = await JwtService.refreshTokenJwtService(token);
 
     return res.status(201).json(response);
   } catch (error) {
-    return res.status(404).json({ message: error.message || error });
+    return res
+      .status(500)
+      .json({message : error.message || error});
   }
 };
 
@@ -141,6 +170,7 @@ const deleteManyUser = async (req, res) => {
 module.exports = {
   createUser,
   loginUser,
+  logoutUser,
   updateUser,
   deleteUser,
   getUserDetail,
