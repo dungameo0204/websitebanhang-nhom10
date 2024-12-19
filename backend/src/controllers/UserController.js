@@ -42,7 +42,11 @@ const loginUser = async (req, res) => {
     const response = await userService.loginUser(req.body);
     const {refresh_token, ...newResponse} = response
 
-    res.cookie('refresh_token', refresh_token);
+    res.cookie('refresh_token', refresh_token, { //Chuyển secure true khi deploy
+      httpOnly: true,
+      secure: false,
+      sameSite: 'Lax'
+    });
 
     return res.status(201).json(newResponse);
 
@@ -54,6 +58,25 @@ const loginUser = async (req, res) => {
       return res.status(401).json({message : error.message});
     }
     return res.status(500).json({message : error.message});
+  }
+};
+
+const logoutUser = async (req, res) => {
+  try {
+    //xoá cookie
+    res.clearCookie('refresh_token', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'Lax'
+  });
+    return res.status(200).json({
+      status: 'OK',
+      message: 'Logout Succesfully'
+    })
+  } catch (error) {
+    return res
+      .status(500)
+      .json({message : error.message || error});
   }
 };
 
@@ -116,9 +139,8 @@ const refreshToken = async (req, res) => {
   try {
     
     const token = req.cookies.refresh_token
-
     if (!token) {
-      return res.status(404).json({ error: "The token is required" });
+      return res.status(404).json({ error: "Refresh token is required" });
     }
 
     const response = await JwtService.refreshTokenJwtService(token);
@@ -126,7 +148,7 @@ const refreshToken = async (req, res) => {
     return res.status(201).json(response);
   } catch (error) {
     return res
-      .status(404)
+      .status(500)
       .json({message : error.message || error});
   }
 };
@@ -148,6 +170,7 @@ const deleteManyUser = async (req, res) => {
 module.exports = {
   createUser,
   loginUser,
+  logoutUser,
   updateUser,
   deleteUser,
   getUserDetail,

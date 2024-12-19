@@ -6,7 +6,6 @@ dotenv.config()
 //Middleware này là dùng cho admin để thực hiện các chức năng thêm, xoá, sửa trên hệ thống
 const authMiddleware = (req, res, next) => {
     const token = req.headers.token?.split(' ')[1];
-    
     if(!token){ 
         return res.status(400).json({ message: 'no token - middleware' }); 
     }    
@@ -35,10 +34,8 @@ const authMiddleware = (req, res, next) => {
 
 //Đây là middleWare để xác thực user dựa vào access_token
 const authUserMiddleware = (req, res, next) => {
-
     const token = req.headers.token?.split(' ')[1];
     const userID = req.params.id;
-
     if(!token){ 
         return res.status(400).json({ message: 'no token - middleware' }); 
     }
@@ -49,6 +46,7 @@ const authUserMiddleware = (req, res, next) => {
         //lỗi chung
         if (err) {
             return res.status(403).json({ message: 'authentication error - middleware' });
+            
         }
 
         if (user?.isAdmin || user?.id === userID) {
