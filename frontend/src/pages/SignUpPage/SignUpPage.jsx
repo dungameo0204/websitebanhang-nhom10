@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons"; // Icon mắt từ Ant Design
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import InputForm from "../../components/InputForm/InputForm";
@@ -10,6 +10,10 @@ import {
 } from "./style";
 import imageLogo from "../../assets/images/logo-login.png";
 import { Image } from "antd";
+import * as UserService from "../../services/UserService";
+import * as Message from "../../components/Message/Message";
+import { useMutationHooks } from "../../hooks/useMutationHook";
+import Loading from "../../components/LoadingComponent/Loading";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -18,6 +22,21 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  //Mutation (For SignUp)
+  const mutation = useMutationHooks(data => UserService.signupUser(data));
+
+  const { data, error, isPending, isSuccess, isError } = mutation;
+
+  //Effect (Message)
+  useEffect (() => {
+    if(isSuccess){
+      Message.success()
+      handleNavigateSignIn()
+    }else if (isError){
+      Message.error()
+    }
+  }, [isSuccess, isError])
 
   const handleOnChangeEmail = (value) => {
     setEmail(value);
@@ -31,12 +50,14 @@ const SignUpPage = () => {
     setConfirmPassword(value);
   };
 
+
+  //Chuyển hướng sau khi đã đăng ký thành công
   const handleNavigateSignIn = () => {
     navigate("/signin");
   };
 
   const handleSignUp = () => {
-    console.log("signup", email, password, confirmPassword);
+    mutation.mutate({ email, password, confirmPassword });
   };
 
   return (
@@ -109,28 +130,35 @@ const SignUpPage = () => {
               handleOnChange={handleOnChangeConfirmPassword}
             />
           </div>
-          <ButtonComponent
-            disabled={
-              !email.length || !password.length || !confirmPassword.length
-            }
-            onClick={handleSignUp}
-            bordered={false}
-            size={40}
-            styleButton={{
-              background: "rgb(255, 57, 69)",
-              height: "48px",
-              width: "100%",
-              borderRadius: "4px",
-              border: "none",
-              margin: "26px 0 10px",
-            }}
-            textButton={"Đăng ký"}
-            styleTextButton={{
-              color: "#fff",
-              fontSize: "15px",
-              fontWeight: "700",
-            }}
-          />
+          <Loading isLoading={isPending}>
+            {mutation.isError && error?.response && (
+              <span style={{ color: "red" }}>
+                {error.response.data.message}
+              </span>
+            )}
+            <ButtonComponent
+              disabled={
+                !email.length || !password.length || !confirmPassword.length
+              }
+              onClick={handleSignUp}
+              bordered={false}
+              size={40}
+              styleButton={{
+                background: "rgb(255, 57, 69)",
+                height: "48px",
+                width: "100%",
+                borderRadius: "4px",
+                border: "none",
+                margin: "26px 0 10px",
+              }}
+              textButton={"Đăng ký"}
+              styleTextButton={{
+                color: "#fff",
+                fontSize: "15px",
+                fontWeight: "700",
+              }}
+            />
+          </Loading>
           <p>
             Bạn đã có tài khoản?
             <WrapperTextLight onClick={handleNavigateSignIn}>
