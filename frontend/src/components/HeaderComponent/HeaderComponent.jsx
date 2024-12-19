@@ -16,7 +16,8 @@ import {
 } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 
-const HeaderComponent = () => {
+const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
+  const order = useSelector((state) => state.order);
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const handleNavigateLogin = () => {
