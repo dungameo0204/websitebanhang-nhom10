@@ -73,12 +73,6 @@ const HomePage = () => {
                                 />
                             )
                         })}
-
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
                     </WrapperProducts>
                     <div
                         style={{
