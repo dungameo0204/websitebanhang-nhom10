@@ -21,40 +21,6 @@ import ModalComponent from "../ModalComponent/ModalComponent";
 import { Select } from "antd";
 
 const AdminProduct = () => {
-  ///////////////////////////Xoá những func dưới sau khi đã update token
-  // const onUpdateProduct = () => {
-  //   mutationUpdate.mutate(
-  //     { id: rowSelected, productData: stateDetailedProduct },
-  //     {
-  //       onSettled: () => {
-  //         queryProduct.refetch();
-  //       },
-  //     }
-  //   );
-  // };
-
-  // const mutationUpdate = useMutationHooks((data) => {
-  //   const { id, productData } = data; //gán giá trị các thuộc tính vào biến có cùng tên
-  //   const res = ProductService.updateProduct(id, productData);
-  //   return res;
-  // });
-
-  // const mutationDelete = useMutationHooks((id) => {
-  //   /////////////////////////////////////////////// Mở lại sau khi đã có token
-  //   const res = ProductService.deleteProduct(id);
-  //   return res;
-  // });
-
-  // const handleDeleteProduct = () => {
-  //   mutationDelete.mutate(rowSelected, {
-  //     onSettled: () => {
-  //       queryProduct.refetch();
-  //     },
-  //   });
-  // };
-
-  ///////////////////////////////////////////////////////////
-
   /*--- Init ---*/
   //POP-UP - Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -309,6 +275,7 @@ const AdminProduct = () => {
   };
 
   const onUpdateProduct = () => { 
+    console.log("debug",user?.access_token)
     mutationUpdate.mutate({id: rowSelected, token: user?.access_token, ...stateDetailedProduct}, {
       onSettled : () =>{
         queryProduct.refetch();
@@ -939,7 +906,7 @@ const AdminProduct = () => {
         onOk={handleDeleteProduct}
       >
         <Loading isLoading={isPendingDeleted}>
-          <div>Bạn có chắc xoá sản phẩm không?</div>
+          <div>Bạn có chắc muốn xoá sản phẩm này không?</div>
         </Loading>
       </ModalComponent>
     </div>

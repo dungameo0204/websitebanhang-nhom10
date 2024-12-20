@@ -88,13 +88,16 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const user = await userService.updateUser(userID, data);
+    const response = await userService.updateUser(userID, data);
 
     return res
       .status(201)
-      .json({ message: "User updated successfully", data: user });
+      .json(response);
   } catch (error) {
-    return res.status(404).json({ error: error.message });
+    return res.status(500).json({
+      status: 'ERROR',
+      message : error.message || 'An unexpected error occurred while updating the user data'
+  })
   }
 };
 

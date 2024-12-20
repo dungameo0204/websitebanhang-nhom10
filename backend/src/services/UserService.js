@@ -81,7 +81,11 @@ const updateUser = (id, data) => {
                 data.password = await bcrypt.hash(data.password, 10);
             }
             const updatedUser = await User.findByIdAndUpdate(id, data, {new: true});
-            return resolve(updatedUser);
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: updatedUser
+            });
 
         } catch (error) {
             console.log("service",error);
@@ -100,11 +104,16 @@ const deleteUser = (id) => {
             }
 
             await User.findByIdAndDelete(id);
-            resolve({message: 'User deleted'});
+            resolve({
+                status: 'OK',
+                message: 'USER DELETED SUCCESSFULLY',
+            });
 
         } catch (error) {
-            console.log("service",error);
-            reject(error);
+            reject({
+                status: 'ERROR',
+                message: error.message || 'An error occurred when deleting user from service'
+            });
         }
     }   
     )

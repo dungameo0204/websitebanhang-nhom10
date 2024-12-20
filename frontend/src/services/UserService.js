@@ -17,14 +17,38 @@ export const signupUser = async (data) => {
     return res.data;
 }
 
-////Chưa hoàn thiện
-export const updateUser = async (data, id) => {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/update-user/${id}`, data)
+export const getDetailsUser = async (id, access_token) => {
+    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/user/user-detail/${id}`, {
+        headers: {
+            token: `Bearer ${access_token}`
+        }
+    })
+    
     return res.data;
 }
 
-export const getDetailsUser = async (id, access_token) => {
-    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/user/user-detail/${id}`, {
+export const updateUser = async (id, access_token,data) => {
+    const res = await axiosJWT.put(`${process.env.REACT_APP_API_URL}/user/update-user/${id}`, data, {
+        headers: {
+            token: `Bearer ${access_token}`
+        }
+    })
+    
+    return res.data;
+}
+
+export const deleteUser = async (id, access_token) => {
+    const res = await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/user/delete-user/${id}`, {
+        headers: {
+            token: `Bearer ${access_token}`
+        }
+    })
+    
+    return res.data;
+}
+
+export const getAllUser = async (access_token) => {
+    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/user/get-all`, {
         headers: {
             token: `Bearer ${access_token}`
         }
