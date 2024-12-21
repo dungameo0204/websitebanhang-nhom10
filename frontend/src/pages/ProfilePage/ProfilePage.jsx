@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons'
 import { getBase64 } from '../../utils';
-import { updateUser, getDetailsUser } from '../../services/UserService';
+import * as UserService from "../../services/UserService";
 import * as message from '../../components/Message/Message'
 import Loading from '../../components/LoadingComponent/Loading'
 import { useMutationHooks } from '../../hooks/useMutationHook'
@@ -24,11 +24,12 @@ const ProfilePage = () => {
     const mutation = useMutationHooks(
         (data) => {
             const { id, access_token, ...rests } = data
-            updateUser(id, rests, access_token)
+            UserService.updateUser(id, rests, access_token)
         }
     )
     const dispatch = useDispatch()
     const { data, isLoading, isSuccess, isError } = mutation
+
     useEffect(() => {
         setEmail(user?.email)
         setName(user?.name)
@@ -47,14 +48,10 @@ const ProfilePage = () => {
     }, [isSuccess, isError])
 
     const handleGetDetailsUser = async (id, token) => {
-        const res = await getDetailsUser(id, token)
-        dispatch(updateUser({ ...res?.data, access_token: token }))
-        // updateUser này là của redux (import cái rudex)
+        const res = await UserService.getDetailsUser(id, token)
+        dispatch(UserService.updateUser({ ...res?.data, access_token: token }))
+
     }
-
-
-
-
 
     const handleOnchangeEmail = (value) => {
         setEmail(value)
@@ -78,17 +75,18 @@ const ProfilePage = () => {
     }
 
     const handleUpdate = () => {
-        //mutation.mutate({ id: user?.id, email, name, phone, address, avatar, access_token: user?.access_token })
+        mutation.mutate({ id: user?.id, email, name, phone, address, avatar, access_token: user?.access_token })
+        // mutation.mutate(user?.id, { email, name, phone, address, avatar })
 
     }
     return (
         <div style={{ width: '1270px', margin: '0 auto', height: '500px' }}>
-            <WrapperHeader>Thong tin nguoi dung</WrapperHeader>
+            <WrapperHeader>Thông tin người dùng </WrapperHeader>
             {/* <loading isLoading= {isLoading}> */}
             <WrapperContentProfile>
                 <WrapperInput>
                     <WrapperLabel htmlFor="name">Name</WrapperLabel>
-                    <InputForm style={{ with: '300px' }} id="name" value={name} onChange={handleOnchangeName} />
+                    <InputForm style={{ with: '300px' }} id="name" value={name} OnChange={handleOnchangeName} />
                     <ButtonComponent
                         onClick={handleUpdate}
                         size={40}
@@ -105,7 +103,7 @@ const ProfilePage = () => {
 
                 <WrapperInput>
                     <WrapperLabel htmlFor="email">Email</WrapperLabel>
-                    <InputForm style={{ with: '300px' }} id="email" value={email} onChange={handleOnchangeEmail} />
+                    <InputForm style={{ with: '300px' }} id="email" value={email} OnChange={handleOnchangeEmail} />
                     <ButtonComponent
                         onClick={handleUpdate}
                         size={40}
@@ -122,7 +120,7 @@ const ProfilePage = () => {
 
                 <WrapperInput>
                     <WrapperLabel htmlFor="phone">Phone</WrapperLabel>
-                    <InputForm style={{ with: '300px' }} id="phone" value={phone} onChange={handleOnchangePhone} />
+                    <InputForm style={{ with: '300px' }} id="phone" value={phone} OnChange={handleOnchangePhone} />
                     <ButtonComponent
                         onClick={handleUpdate}
                         size={40}
@@ -139,7 +137,7 @@ const ProfilePage = () => {
 
                 <WrapperInput>
                     <WrapperLabel htmlFor="address">Address</WrapperLabel>
-                    <InputForm style={{ with: '300px' }} id="address" value={address} onChange={handleOnchangeAddress} />
+                    <InputForm style={{ with: '300px' }} id="address" value={address} OnChange={handleOnchangeAddress} />
                     <ButtonComponent
                         onClick={handleUpdate}
                         size={40}
