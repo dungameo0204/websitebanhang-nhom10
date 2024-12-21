@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const createProduct = async (req,res) => {
     try{
         const {name, image, type, price, countInStock, rating, description} = req.body
-        console.log('check', "created")
 
         //Nếu thiếu input thì báo input lỗi
         if(!name || !image || !type || !price || !countInStock || !rating || !description){
@@ -77,7 +76,7 @@ const getAllProduct = async (req, res) => {
     try {        
         // Lấy chỉ số page hiện tại từ query hoặc sử dụng giá trị mặc định
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 7;
+        const limit = parseInt(req.query.limit) || 12;
 
         // Lấy sort từ query
         const sortParams = req.query.sort;
@@ -87,6 +86,19 @@ const getAllProduct = async (req, res) => {
 
         // Service lấy dữ liệu toàn bộ sản phẩm trong trang
         const response = await ProductService.getAllProduct(page, limit, sortParams,filterParams);
+
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(404).json({
+            status: 'ERROR',
+            message: error.message || 'An unexpected error occurred while getting all product'
+        });
+    }
+}
+
+const getAllType = async (req, res) => {
+    try {        
+        const response = await ProductService.getAllType();
 
         return res.status(200).json(response);
     } catch (error) {
@@ -146,6 +158,7 @@ module.exports = {
     updateProduct,
     getDetailedProduct,
     getAllProduct,
+    getAllType,
     deleteProduct,
     deleteManyProduct
 }

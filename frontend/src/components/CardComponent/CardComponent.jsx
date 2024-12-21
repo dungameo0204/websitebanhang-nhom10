@@ -6,7 +6,6 @@ import {
 } from '@ant-design/icons';
 const CardComponent = (props) => {
     const { countInStock, description, image, name, price, rating, type, discount, selled } = props
-
     return (
         <WrapperCardStyle
             hoverable
@@ -26,7 +25,11 @@ const CardComponent = (props) => {
             <WrapperPriceText>
                 <span style={{ marginRight: '8px' }}>{price}</span>
                 <WrapperDiscountText>
+<<<<<<< HEAD
                     {discount || -5}%
+=======
+                    {- discount || -5} %
+>>>>>>> 9ef70801a3fceb2bc5da36913b2bb2b6db70ac44
                 </WrapperDiscountText>
             </WrapperPriceText>
 

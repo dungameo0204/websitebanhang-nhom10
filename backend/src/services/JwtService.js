@@ -2,12 +2,12 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
 const generateAccessToken = (payload) => {
-    const access_token = jwt.sign({
-        payload
-    },
+
+    const access_token = jwt.sign(
+        {...payload},
         process.env.ACCESS_TOKEN,   
         {
-            expiresIn: '1h'
+            expiresIn: '30s'
         }
 
     );
@@ -15,9 +15,8 @@ const generateAccessToken = (payload) => {
 }
 
 const generateRefreshToken = (payload) => {
-    const refresh_token = jwt.sign({
-        payload
-    },
+    const refresh_token = jwt.sign(
+        {...payload},
         process.env.REFRESH_TOKEN,
         {
             expiresIn: '365d'
@@ -29,20 +28,15 @@ const generateRefreshToken = (payload) => {
 const refreshTokenJwtService = (token) => {
     return new Promise((resolve, reject) => {
         try{
-            jwt.verify(token, process.env.REFRESH_TOKEN, (error, user) => {
+            jwt.verify(token, process.env.REFRESH_TOKEN,  (error, user) => {
                 if (error) {
-                    return reject(error);
+                    return reject(error);  
                 }
-                const access_token = generateAccessToken({
-                    id: user.payload.id,
-                    isAdmin: user.payload.isAdmin
+                const access_token =  generateAccessToken({
+                    id: user?.id,
+                    isAdmin: user?.isAdmin
                 });
-                const refresh_token = generateRefreshToken({
-                    id: user.payload.id,
-                    isAdmin: user.payload.isAdmin
-                });
-                console.log('access_token', access_token);
-                resolve({"message": "Token updated successfully", access_token, refresh_token});
+                resolve({"message": "Token updated successfully", access_token});
             });
             
 

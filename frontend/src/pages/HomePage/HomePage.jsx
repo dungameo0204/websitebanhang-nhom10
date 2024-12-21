@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SliderComponent from "../../components/SliderComponent/SliderComponent";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { WrapperButtonMore, WrapperProducts, WrapperTypeProduct } from "./style";
@@ -7,7 +7,12 @@ import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import { useQuery } from '@tanstack/react-query';
+<<<<<<< HEAD
 import { getAllProduct } from "../../services/ProductService"
+=======
+import {getAllProduct, getAllTypeProduct} from "../../services/ProductService"
+import { useEffect } from "react";
+>>>>>>> 9ef70801a3fceb2bc5da36913b2bb2b6db70ac44
 import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { Color } from "antd/es/color-picker";
@@ -15,12 +20,18 @@ import { Col } from "antd";
 import * as ProductService from "../../services/ProductService";
 
 const HomePage = () => {
-    const arr = ["TV", "Tủ lạnh", "Laptop"];
+    const [typeProducts, setTypeProducts] = useState([])
     const fetchProductAll = async () => {
         const res = await ProductService.getAllProduct()
         console.log('res', res);
 
         return res
+    }
+    const fetchAllTypeProduct = async () => {
+        const res = await getAllTypeProduct()
+        if(res?.status === 'OK'){
+            setTypeProducts(res?.data)
+        }        
     }
     const { isLoading, data: products } = useQuery({
         queryKey: ['product'],
@@ -28,11 +39,18 @@ const HomePage = () => {
         retry: 3,
         retryDelay: 1000
     })
+<<<<<<< HEAD
+=======
+
+    useEffect(() => {
+        fetchAllTypeProduct()
+    }, [])
+>>>>>>> 9ef70801a3fceb2bc5da36913b2bb2b6db70ac44
     return (
         <>
             <div style={{ padding: "0 120px" }}>
                 <WrapperTypeProduct>
-                    {arr.map((item) => (
+                    {typeProducts.map((item) => (
                         <TypeProduct name={item} key={item} />
                     ))}
                 </WrapperTypeProduct>
@@ -64,8 +82,11 @@ const HomePage = () => {
                                 />
                             )
                         })}
+<<<<<<< HEAD
                         <CardComponent />
 
+=======
+>>>>>>> 9ef70801a3fceb2bc5da36913b2bb2b6db70ac44
                     </WrapperProducts>
                     <div
                         style={{
