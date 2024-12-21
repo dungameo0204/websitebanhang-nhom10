@@ -7,16 +7,18 @@ import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import { useQuery } from '@tanstack/react-query';
-import {getAllProduct} from "../../services/ProductService"
+import { getAllProduct } from "../../services/ProductService"
 import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { Color } from "antd/es/color-picker";
 import { Col } from "antd";
+import * as ProductService from "../../services/ProductService";
 
 const HomePage = () => {
     const arr = ["TV", "Tủ lạnh", "Laptop"];
     const fetchProductAll = async () => {
-        const res = await getAllProduct()
+        const res = await ProductService.getAllProduct()
+        console.log('res', res);
 
         return res
     }
@@ -25,7 +27,7 @@ const HomePage = () => {
         queryFn: fetchProductAll,
         retry: 3,
         retryDelay: 1000
-      })
+    })
     return (
         <>
             <div style={{ padding: "0 120px" }}>
@@ -62,12 +64,8 @@ const HomePage = () => {
                                 />
                             )
                         })}
+                        <CardComponent />
 
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
-                        <CardComponent />
                     </WrapperProducts>
                     <div
                         style={{

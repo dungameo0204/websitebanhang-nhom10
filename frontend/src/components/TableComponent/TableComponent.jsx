@@ -3,7 +3,7 @@ import { Table, Radio, Divider } from "antd";
 import Loading from "../../components/LoadingComponent/Loading";
 
 const TableComponent = (props) => {
-  const [selectionType = 'checkbox'] = props
+  const { selectionType = 'checkbox' } = props
 
   const columns = [
     {

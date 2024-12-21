@@ -2,6 +2,7 @@ import { Col, Flex, Row } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  WrapperContentPopup,
   WrapperHeader,
   WrapperHeaderAccout,
   WrapperTextHeader,
@@ -20,11 +21,22 @@ const HeaderComponent = () => {
   const handleNavigateLogin = () => {
     navigate("/signin");
   };
+  //bo sung vid32
+  // const handleLogout = async () => {
+  //   setLoading(true)
+  //   await UserService.logoutUser()
+  //   dispatchEvent(resetUser())
+  //   setLoading(false)
+  // }
 
-  const handleLogout = async () => {
-    setLoading(true)
-    await UserService.logoutUser
-  }
+  const content = (
+    <div>
+      {/* <WrapperContentPopup onClick={handleLogout}>dang xuat</WrapperContentPopup> */}
+      <WrapperContentPopup onClick={() => navigate('/profile-user')}>Thong tin nguoi dung</WrapperContentPopup>
+
+    </div>
+  )
+
   return (
     <div>
       <WrapperHeader gutter={16}>
