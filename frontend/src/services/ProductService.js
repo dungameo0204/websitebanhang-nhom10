@@ -59,6 +59,15 @@ export const deleteProduct = async (id, access_token) => {
         return res.data;
 }
 
+export const deleteManyProduct = async (data, access_token) => {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/product/delete-many/` ,data, {
+        headers: {
+            token: `Bearer ${access_token}`
+        }
+    });
+    return res.data;
+}
+
 
 // export const updateProduct = async (id, data) => {
 //     const res = await axios.put(`${process.env.REACT_APP_API_URL}/product/update/${id}`,data);

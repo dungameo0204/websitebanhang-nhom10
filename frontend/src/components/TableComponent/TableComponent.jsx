@@ -4,7 +4,7 @@ import Loading from "../../components/LoadingComponent/Loading";
 import { use } from "react";
 
 const TableComponent = (props) => {
-  const { selectionType = "checkbox", columns=[], data=[], isLoading=false } = props;
+  const { selectionType = "checkbox", columns=[], data=[], isLoading=false, handleDeleteManyProducts } = props;
   const [rowSelectedKeys, setRowSelectedKeys] = useState([]);
 
   //Khi người dùng thay đổi lựa chọn hàng (row) bằng checkbox
@@ -20,7 +20,7 @@ const TableComponent = (props) => {
   };
 
   const handleDeleteAll = () => { 
-    console.log('Xóa tất cả');  
+    handleDeleteManyProducts(rowSelectedKeys); 
   }
 
   {/* truyền giá trị biến rowselection vào ...rowselection */}

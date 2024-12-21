@@ -135,6 +135,17 @@ const AdminProduct = () => {
    },
   );
 
+  const mutationDeleteMany = useMutationHooks((data) => {
+    const {token,... ids } = data; //gán giá trị các thuộc tính vào biến có cùng tên
+    const res = ProductService.deleteManyProduct(
+      ids,
+      token);
+    return res;
+   },
+  );
+
+  console.log("mutationDeleteMany:", mutationDeleteMany);
+
   //Get mutation props:
   const { data, isPending, isError, isSuccess } = mutation;
   const {
@@ -153,6 +164,16 @@ const AdminProduct = () => {
   //Form hook:
   const [form] = Form.useForm(); //Dùng form hook để tạo instance của Form -> form
   const [formDrawer] = Form.useForm();
+
+
+  //handle delete many
+  const handleDeleteManyProduct = (ids) => {
+    mutationDeleteMany.mutate({ids: ids, token: user?.access_token}, {
+      onSettled: () => {
+        queryProduct.refetch();
+      },
+    });
+  };
 
   /*--- HANDLE FORM ---*/
 
@@ -596,6 +617,7 @@ const AdminProduct = () => {
       </div>
       <div style={{ marginTop: "20px" }}>
         <TableComponent
+          handleDeleteManyProducts={handleDeleteManyProduct}
           columns={columns}
           data={dataTable}
           isLoading={isLoadingProducts}

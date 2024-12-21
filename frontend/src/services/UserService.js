@@ -40,3 +40,13 @@ export const refreshToken = async () => {
     return res.data;
 }
 
+export const deleteManyUser = async (data, access_token) => {
+    const res = await axios.delete(`${process.env.REACT_APP_API_URL}/user/delete-many/` ,data, {
+        headers: {
+            token: `Bearer ${access_token}`
+        }
+    });
+    return res.data;
+}
+
+

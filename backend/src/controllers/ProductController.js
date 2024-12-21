@@ -133,8 +133,8 @@ const deleteProduct = async (req,res) => {
 
 const deleteManyProduct = async (req,res) => {
     try{
-        const ids = req.body;
-        
+        const ids = req.body.ids;
+        console.log(ids);
         if(!ids || ids.length === 0) {
             return res.status(400).json({
                 status: 'ERROR',
