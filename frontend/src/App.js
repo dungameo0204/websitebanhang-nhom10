@@ -9,66 +9,36 @@ import { jwtDecode } from "jwt-decode";
 
 function App() {
 
-  // const dispatch = useDispatch()
-  // const user = useSelector((state) => state.user)
-
-  // useEffect(() => {
-  //   const  {storageData, decoded} = handleDecoded()
-  //   if(decoded?.id) {
-  //     handleGetDetailsUser(decoded?.id, storageData)
-  //   }
-  //   console.log('debug', storageData)
-  // })
-
-  // const handleDecoded = () => {
-  //   let storageData = localStorage.getItem('access_token');
-  //   let decoded = {}
-  //   if(storageData && isJsonString(storageData)) {
-  //     storageData = JSON.parse(storageData)
-  //     decoded = jwtDecode(storageData)
-  //   }
-  //   return {decoded, storageData}
-  // }
-
-  // axios.interceptors.request.use(function (config) {
-  //   // Do something before request is sent
-  //   return config;
-  // }, function (error) {
-  //   // Do something with request error
-  //   return Promise.reject(error);
-  // });
-
-  // //User Details
-  //   const handleGetDetailsUser = async (id, token) => {
-  //     const res = await UserService.getDetailsUser(id, token);
-  //     dispatch(updateUser({...res?.data, access_token : token})) // cập nhật slice với dispatch
-  //   }
-
   const dispatch = useDispatch();
 
   const saveTokenInLocalStorage = (tokenName, token) => {
     localStorage.setItem(tokenName, token)
   }
 
-  const handleDecoded = () => {
-    let storageData = localStorage.getItem('access_token');
-    let decoded = {}
-    if(storageData) {
-      decoded = jwtDecode(storageData)
+  const handleDecoded = (token) => {
+    if(!token) {
+      return {}
     }
-    return {decoded, storageData}  
+    return jwtDecode(token);
   }
 
   //Interceptor Axios
   UserService.axiosJWT.interceptors.request.use( async(config) => {
+
     const currentTime = new Date();
-    const {decoded} = handleDecoded();
+
+    let token = config.headers['token']?.split(' ')[1]; // Lấy token từ headers
+
+    if(!token) {
+      token = localStorage.getItem('access_token');
+    }
+    const decoded = handleDecoded(token); //decode token vừa lấy được
     if(decoded?.exp < currentTime.getTime() / 1000) {
       const data = await UserService.refreshToken();
       saveTokenInLocalStorage('access_token', data?.access_token); //cập nhật local storage
-      dispatch(updateUser({ access_token: data?.access_token })); //cập nhật store
+      dispatch(updateUser({access_token: data?.access_token}));
       config.headers['token'] = `Bearer ${data?.access_token}`
-    }
+    }  
     
     return config;
   }, (error) => {
@@ -80,14 +50,22 @@ function App() {
   //User Details
   const handleGetDetailsUser = async (id, token) => {
       const res = await UserService.getDetailsUser(id, token);
-      dispatch(updateUser(res?.data)); // cập nhật slice với dispatch
+      const localStorageToken = localStorage.getItem('access_token'); //lấy giá trị token mới nhất từ local 
+      dispatch(updateUser({...res?.data, access_token: localStorageToken})); // cập nhật lại store với data và token mới nhất
       
   }
 
+  //Dùng để lấy token từ local và extract ra
+  const GetLocalTokenAndDecode = () => {
+    const localStorageToken = localStorage.getItem('access_token');
+    const decoded = handleDecoded (localStorageToken);
+    return {localStorageToken, decoded}
+  }
+
   useEffect(() => {
-    const {decoded, storageData} = handleDecoded ()
+    const {localStorageToken, decoded} = GetLocalTokenAndDecode();
     if(decoded?.id){
-      handleGetDetailsUser(decoded?.id, storageData);
+      handleGetDetailsUser(decoded?.id, localStorageToken);
     }
   },[])
 

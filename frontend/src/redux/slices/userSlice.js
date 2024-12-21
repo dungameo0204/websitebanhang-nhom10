@@ -12,6 +12,7 @@ export const userSlice = createSlice({
   reducers: {
     updateUser: (state,action) => {
       const {name, email, access_token} = action.payload
+
       if(name){
         state.name = name || email;
       }
@@ -21,9 +22,13 @@ export const userSlice = createSlice({
       if(access_token){
         state.access_token = access_token;
       }
-      
-      
     },
+    // updateUser: (state, action) => {
+    //   const {name, email, access_token} = action.payload
+    //   state.name = name || email;
+    //   state.email = email;
+    //   state.access_token = access_token;
+    // },
     resetUser: (state) => {
       state.name = '';
       state.email = '';

@@ -81,7 +81,11 @@ const updateUser = (id, data) => {
                 data.password = await bcrypt.hash(data.password, 10);
             }
             const updatedUser = await User.findByIdAndUpdate(id, data, {new: true});
-            return resolve(updatedUser);
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: updatedUser
+            });
 
         } catch (error) {
             console.log("service",error);
@@ -100,11 +104,16 @@ const deleteUser = (id) => {
             }
 
             await User.findByIdAndDelete(id);
-            resolve({message: 'User deleted'});
+            resolve({
+                status: 'OK',
+                message: 'USER DELETED SUCCESSFULLY',
+            });
 
         } catch (error) {
-            console.log("service",error);
-            reject(error);
+            reject({
+                status: 'ERROR',
+                message: error.message || 'An error occurred when deleting user from service'
+            });
         }
     }   
     )
@@ -116,11 +125,17 @@ const deleteManyUser = (ids) => {
             
 
             await User.deleteMany({_id: { $in: ids }});
-            resolve({message: 'Users deleted successfully'});
+            
+            resolve({
+                status: 'OK',
+                message: 'USERS DELETED SUCCESSFULLY',
+            });
 
         } catch (error) {
-            console.log("service",error);
-            reject(error);
+            reject({
+                status: 'ERROR',
+                message: error.message || 'An error occurred when deleting users from service'
+            });
         }
     }   
     )
@@ -131,7 +146,10 @@ const getUserDetail = (id) => {
         try{         
             const checkUser = await User.findOne({_id: id});
             if (!checkUser) {
-                return reject({message: 'User not found'});
+                resolve({
+                    status: 'OK',
+                    message: "User not found"
+                });
             }
 
             resolve({
@@ -141,8 +159,10 @@ const getUserDetail = (id) => {
             });
 
         } catch (error) {
-            console.log("service",error);
-            reject(error);
+            reject({
+                status: 'ERROR',
+                message: error.message || 'An error occurred when updating the product item'
+            });
         }
     }   
     )
@@ -153,6 +173,13 @@ const getAllUser = () => {
         try{         
             
             const allUser = await User.find();
+            if (allUser.length === 0) {
+                resolve({
+                    status: 'OK',
+                    message: 'No User found',
+                    data: [],
+                });}
+
             resolve({
                 message: 'SUCCESS',
                 data: allUser

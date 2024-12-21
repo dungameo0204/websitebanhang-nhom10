@@ -9,7 +9,6 @@ import {
   WrapperTextHeader,
   WrapperTextHeaderSmall,
 } from "./style";
-import Search from "antd/es/transfer/search";
 import {
   UserOutlined,
   CaretDownOutlined,
@@ -18,11 +17,13 @@ import {
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import * as UserService from "../../services/UserService";
 import {resetUser} from '../../redux/slices/userSlice';
+import { searchProduct } from "../../redux/slices/productSlice";
 import Loading from "../LoadingComponent/Loading";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const handleNavigateLogin = () => {
@@ -45,6 +46,13 @@ const HeaderComponent = () => {
     </div>
   );  
 
+  {/*Dùng cho ButtonInputSearch:*/}
+  const onSearch = (event) => {
+    setSearch(event.target.value);
+    dispatch(searchProduct(event.target.value));
+    
+  }
+
   return (
     <div>
       <WrapperHeader gutter={16}>
@@ -56,6 +64,7 @@ const HeaderComponent = () => {
             size="large"
             textButton="Tìm kiếm"
             placeholder="input search text"
+            onChange={onSearch}
 
             //onSearch={onSearch}
           />

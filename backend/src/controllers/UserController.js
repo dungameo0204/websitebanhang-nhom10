@@ -88,13 +88,16 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const user = await userService.updateUser(userID, data);
+    const response = await userService.updateUser(userID, data);
 
     return res
       .status(201)
-      .json({ message: "User updated successfully", data: user });
+      .json(response);
   } catch (error) {
-    return res.status(404).json({ error: error.message });
+    return res.status(500).json({
+      status: 'ERROR',
+      message : error.message || 'An unexpected error occurred while updating the user data'
+  })
   }
 };
 
@@ -109,6 +112,26 @@ const deleteUser = async (req, res) => {
     return res.status(200).json(response);
   } catch (error) {
     return res.status(404).json({ error: error.message });
+  }
+};
+
+const deleteManyUser = async (req, res) => {
+  try {
+    const ids = req.body.ids;
+    if (!ids || ids.length === 0) {
+      return res.status(400).json({
+        status: 'ERROR',
+        message: 'UserIDs are required'
+    })
+    }
+
+    const response = await userService.deleteManyUser(ids);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(500).json({
+      status: 'ERROR',
+      message : error.message || 'An unexpected error occurred while deleting users'
+  })
   }
 };
 
@@ -153,19 +176,7 @@ const refreshToken = async (req, res) => {
   }
 };
 
-const deleteManyUser = async (req, res) => {
-  try {
-    const ids = req.body;
-    if (!ids) {
-      return res.status(404).json({ error: "Users not found" });
-    }
 
-    const response = await userService.deleteManyUser(ids);
-    return res.status(200).json(response);
-  } catch (error) {
-    return res.status(404).json({ error: error.message });
-  }
-};
 
 module.exports = {
   createUser,
