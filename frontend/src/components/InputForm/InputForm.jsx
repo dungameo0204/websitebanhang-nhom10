@@ -4,7 +4,7 @@ import { WrapperInputStyle } from "./style";
 const InputForm = (props) => {
   const { placeholder = "Nhập text", ...rest } = props;
   const handleOnChangeInput = (e) => {
-    props.OnChange(e.target.value);
+    props.onChange(e.target.value);
   };
   return (
     <WrapperInputStyle

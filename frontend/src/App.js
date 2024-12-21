@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { routes } from './routes'
 import DefaultComonent from './components/DefaultComponent/DefaultComonent'
 import * as UserService from "./services/UserService"
-import { updateUser } from "./redux/slices/userSlice"
+import { updateUser, userSlice } from "./redux/slices/userSlice"
 import { useDispatch } from 'react-redux'
 import { jwtDecode } from "jwt-decode";
 import axios from 'axios'
@@ -98,7 +98,7 @@ function App() {
         <Routes>
           {routes.map((route) => {
             const Page = route.page
-            // const isCheckAuth = !route.isPrivate
+            //const isCheckAuth = !route.isPrivate || userSlice.isAdmin
             const Layout = route.isShowHeader ? DefaultComonent : Fragment
             return (
               <Route key={route.path} path={route.path} element={

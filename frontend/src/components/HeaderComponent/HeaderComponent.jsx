@@ -1,5 +1,5 @@
 import { Button, Col, Flex, Popover, Row } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,6 +24,8 @@ const HeaderComponent = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [userName, setUserName] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
   const [loading, setLoading] = useState(false);
   const handleNavigateLogin = () => {
     navigate("/signin");
@@ -37,6 +39,12 @@ const HeaderComponent = () => {
     setLoading(false);
   }
 
+  useEffect(() => {
+    setLoading(true)
+    setUserName(user?.name)
+    setUserAvatar(user?.avatar)
+    setLoading(false)
+  }, [user?.name, user?.avatar])
   //Dùng cho Popover:
   const content = (
     <div>
@@ -66,11 +74,20 @@ const HeaderComponent = () => {
         >
           <Loading isLoading={loading}>
             <WrapperHeaderAccout>
-              <UserOutlined style={{ fontSize: "30px" }} />
-              {user?.name ? (
+              {userAvatar ? (
+                <img src={userAvatar} alt="avatar" style={{
+                  height: '30px',
+                  width: '30px',
+                  borderRadius: '50%',
+                  objectFit: 'cover'
+                }} />
+              ) : (
+                <UserOutlined style={{ fontSize: "30px" }} />
+              )}
+              {userName ? (
                 <>
                   <Popover content={content} trigger="click">
-                    <div style={{ cursor: "pointer" }}>{user.name}</div>
+                    <div style={{ cursor: "pointer" }}>{userName?.length ? userName : user?.email}</div>
                   </Popover>
                 </>
               ) : (
