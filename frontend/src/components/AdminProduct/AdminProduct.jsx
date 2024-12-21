@@ -22,7 +22,6 @@ import { Select } from "antd";
 
 const AdminProduct = () => {
   ///////////////////////////Xoá những func dưới sau khi đã update token
-<<<<<<< HEAD
   // const onUpdateProduct = () => {
   //   mutationUpdate.mutate(
   //     { id: rowSelected, productData: stateDetailedProduct },
@@ -53,38 +52,6 @@ const AdminProduct = () => {
   //     },
   //   });
   // };
-=======
-  const onUpdateProduct = () => {
-    mutationUpdate.mutate(
-      { id: rowSelected, productData: stateDetailedProduct },
-      {
-        onSettled: () => {
-          queryProduct.refetch();
-        },
-      }
-    );
-  };
-
-  const mutationUpdate = useMutationHooks((data) => {
-    const { id, productData } = data; //gán giá trị các thuộc tính vào biến có cùng tên
-    const res = ProductService.updateProduct(id, productData);
-    return res;
-  });
-
-  const mutationDelete = useMutationHooks((id) => {
-    /////////////////////////////////////////////// Mở lại sau khi đã có token
-    const res = ProductService.deleteProduct(id);
-    return res;
-  });
-
-  const handleDeleteProduct = () => {
-    mutationDelete.mutate(rowSelected, {
-      onSettled: () => {
-        queryProduct.refetch();
-      },
-    });
-  };
->>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
 
   ///////////////////////////////////////////////////////////
 
@@ -148,15 +115,14 @@ const AdminProduct = () => {
   });
 
   //Update product mutation hooks
-<<<<<<< HEAD
   const mutationUpdate = useMutationHooks((data) => {
-    const { id, token, ...rests } = data; 
+    const { id, token, ...rests } = data;
     const res = ProductService.updateProduct(
       id,
       token,
-      {...rests});
+      { ...rests });
     return res;
-   },
+  },
   );
 
   //Delete product mutation hooks
@@ -166,29 +132,8 @@ const AdminProduct = () => {
       id,
       token);
     return res;
-   },
+  },
   );
-=======
-  // const mutationUpdate = useMutationHooks((data) => { /////////////////////////////////////////////// Mở lại sau khi đã có token
-  //   const { id, token, ...rests } = data; //gán giá trị các thuộc tính vào biến có cùng tên
-  //   const res = ProductService.updateProduct(
-  //     id,
-  //     token,
-  //     {...rests});
-  //   return res;
-  //  },
-  // );
-
-  //Delete product mutation hooks
-  // const mutationDelete = useMutationHooks((data) => { /////////////////////////////////////////////// Mở lại sau khi đã có token
-  //   const { id, token } = data; //gán giá trị các thuộc tính vào biến có cùng tên
-  //   const res = ProductService.deleteProduct(
-  //     id,
-  //     token);
-  //   return res;
-  //  },
-  // );
->>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
 
   //Get mutation props:
   const { data, isPending, isError, isSuccess } = mutation;
@@ -270,11 +215,11 @@ const AdminProduct = () => {
     return res;
   };
 
-  const handleChangeSelect = (value) => { 
-      setProductState({
-        ...productState,
-        type: value,
-      })
+  const handleChangeSelect = (value) => {
+    setProductState({
+      ...productState,
+      type: value,
+    })
   };
 
   /*--- HANDLE TABLE CONTENTS  ---*/
@@ -363,9 +308,9 @@ const AdminProduct = () => {
     });
   };
 
-  const onUpdateProduct = () => { 
-    mutationUpdate.mutate({id: rowSelected, token: user?.access_token, ...stateDetailedProduct}, {
-      onSettled : () =>{
+  const onUpdateProduct = () => {
+    mutationUpdate.mutate({ id: rowSelected, token: user?.access_token, ...stateDetailedProduct }, {
+      onSettled: () => {
         queryProduct.refetch();
       }
 
@@ -390,27 +335,15 @@ const AdminProduct = () => {
   const handleDeleteCancel = () => {
     setIsDeleteModalOpen(false);
   };
-<<<<<<< HEAD
 
   const handleDeleteProduct = () => {
-    mutationDelete.mutate({id: rowSelected, token: user?.access_token},{
+    mutationDelete.mutate({ id: rowSelected, token: user?.access_token }, {
       onSettled: () => {
         queryProduct.refetch();
       }
     });
   }
 
-=======
-
-  // const handleDeleteProduct = () => {/////////////////////////////////////////////////////////////////////// Mở lại hàm sau khi đã thêm script kiểm tra token
-  //   mutationDelete.mutate({id: rowSelected, token: user?.access_token},{
-  //     onSettled: () => {
-  //       queryProduct.refetch();
-  //     }
-  //   });
-  // }
-
->>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
   /*--- Handle Search ---*/
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -708,7 +641,7 @@ const AdminProduct = () => {
             </Form.Item>
 
             {/* Type field */}
-                {/* Type selection */}
+            {/* Type selection */}
             <Form.Item
               label="Type"
               name="type"
@@ -724,7 +657,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
 
-                {/* Add Type form */}
+            {/* Add Type form */}
             {productState.type === "add_type" && (
               <Form.Item
                 label='New Type'
@@ -733,11 +666,11 @@ const AdminProduct = () => {
                   { required: true, message: "Please input type of product!" },
                 ]}
               >
-                  <InputComponent
-                    value={productState.newType}
-                    onChange={handleOnChange}
-                    name="newType"
-                  />
+                <InputComponent
+                  value={productState.newType}
+                  onChange={handleOnChange}
+                  name="newType"
+                />
               </Form.Item>
             )}
 
