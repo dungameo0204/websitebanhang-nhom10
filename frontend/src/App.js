@@ -1,14 +1,10 @@
 import React, { Fragment, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { routes } from './routes'
-import HeaderComponent from './components/HeaderComponent/HeaderComponent'
 import DefaultComonent from './components/DefaultComponent/DefaultComonent'
 import * as UserService from "./services/UserService"
 import {updateUser} from "./redux/slices/userSlice"
-import axios from 'axios'
-import { useDispatch, useSelector } from 'react-redux'
-import { isJsonString } from './untils'
+import { useDispatch } from 'react-redux'
 import { jwtDecode } from "jwt-decode";
 
 function App() {
@@ -47,6 +43,53 @@ function App() {
   //     const res = await UserService.getDetailsUser(id, token);
   //     dispatch(updateUser({...res?.data, access_token : token})) // cập nhật slice với dispatch
   //   }
+
+  const dispatch = useDispatch();
+
+  const saveTokenInLocalStorage = (tokenName, token) => {
+    localStorage.setItem(tokenName, token)
+  }
+
+  const handleDecoded = () => {
+    let storageData = localStorage.getItem('access_token');
+    let decoded = {}
+    if(storageData) {
+      decoded = jwtDecode(storageData)
+    }
+    return {decoded, storageData}  
+  }
+
+  //Interceptor Axios
+  UserService.axiosJWT.interceptors.request.use( async(config) => {
+    const currentTime = new Date();
+    const {decoded} = handleDecoded();
+    if(decoded?.exp < currentTime.getTime() / 1000) {
+      const data = await UserService.refreshToken();
+      saveTokenInLocalStorage('access_token', data?.access_token); //cập nhật local storage
+      dispatch(updateUser({ access_token: data?.access_token })); //cập nhật store
+      config.headers['token'] = `Bearer ${data?.access_token}`
+    }
+    
+    return config;
+  }, (error) => {
+    
+    return Promise.reject(error);
+  });
+
+
+  //User Details
+  const handleGetDetailsUser = async (id, token) => {
+      const res = await UserService.getDetailsUser(id, token);
+      dispatch(updateUser(res?.data)); // cập nhật slice với dispatch
+      
+  }
+
+  useEffect(() => {
+    const {decoded, storageData} = handleDecoded ()
+    if(decoded?.id){
+      handleGetDetailsUser(decoded?.id, storageData);
+    }
+  },[])
 
   return (
     <div>

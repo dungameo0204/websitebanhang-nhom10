@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const createProduct = async (req,res) => {
     try{
         const {name, image, type, price, countInStock, rating, description} = req.body
-        console.log('check', "created")
 
         //Nếu thiếu input thì báo input lỗi
         if(!name || !image || !type || !price || !countInStock || !rating || !description){

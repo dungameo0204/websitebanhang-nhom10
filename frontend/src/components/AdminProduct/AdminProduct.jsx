@@ -85,7 +85,6 @@ const AdminProduct = () => {
   });
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const user = useSelector((state) => state?.user);
-  console.log('debug',user)
 
   //delete modal
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -310,8 +309,6 @@ const AdminProduct = () => {
   };
 
   const onUpdateProduct = () => { 
-    console.log('debug',rowSelected)
-    console.log('debug', user?.access_token)
     mutationUpdate.mutate({id: rowSelected, token: user?.access_token, ...stateDetailedProduct}, {
       onSettled : () =>{
         queryProduct.refetch();

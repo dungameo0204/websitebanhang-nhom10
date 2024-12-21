@@ -6,9 +6,6 @@ import {
 } from '@ant-design/icons';
 const CardComponent = (props) => {
     const { countInStock, description, image, name, price, rating, type, discount, selled } = props
-    console.log('debug',props)
-    
-
     return (
         <WrapperCardStyle
             hoverable

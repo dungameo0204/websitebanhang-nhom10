@@ -26,7 +26,8 @@ const SignInPage = () => {
   //Mutation (For Signin)
   const mutation = useMutationHooks((data) => UserService.loginUser(data));
 
-  const { data, error, isPending, isSuccess, isError } = mutation;
+  const {data, error, isPending, isSuccess, isError} = mutation
+
 
   const handleNavigateSignUp = () => {
     navigate("/signup");
@@ -62,13 +63,18 @@ const SignInPage = () => {
   };
 
   //Effect
-  useEffect(() => {
-    console.log("location", location);
-    if (isSuccess) {
-      if (location?.state) {
-        navigate(location?.state);
-      } else {
-        navigate("/");
+  useEffect (() => {
+      if(isSuccess){
+        handleNavigateHomePage()
+        saveTokenInLocalStorage('access_token', data?.access_token)
+        if(data?.access_token) {
+          const decoded = jwtDecode(data?.access_token);
+          if(decoded?.id){
+            handleGetDetailsUser(decoded?.id, data?.access_token)
+          }
+        }
+      }else if (isError){
+        Message.error()
       }
 
       handleNavigateHomePage();

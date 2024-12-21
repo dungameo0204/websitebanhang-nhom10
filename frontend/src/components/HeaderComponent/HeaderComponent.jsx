@@ -1,8 +1,9 @@
-import { Col, Flex, Row } from "antd";
-import React from "react";
+import { Button, Col, Flex, Popover, Row } from "antd";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  WrapperContentPopup,
   WrapperHeader,
   WrapperHeaderAccout,
   WrapperTextHeader,
@@ -15,14 +16,36 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
+import * as UserService from "../../services/UserService";
+import {resetUser} from '../../redux/slices/userSlice';
+import Loading from "../LoadingComponent/Loading";
 
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const order = useSelector((state) => state.order);
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const handleNavigateLogin = () => {
     navigate("/signin");
   };
+
+  const handleLogout = async () => {
+    setLoading(true);
+    localStorage.removeItem('access_token');
+    await UserService.logoutUser();
+    dispatch(resetUser());
+    setLoading(false);
+  }
+
+  //Dùng cho Popover:
+  const content = (
+    <div>
+      <WrapperContentPopup>Thông tin người dùng</WrapperContentPopup>
+      <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
+    </div>
+  );  
+
   return (
     <div>
       <WrapperHeader gutter={16}>
@@ -42,10 +65,15 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           span={6}
           style={{ display: "flex", gap: "20px", alignItems: "center" }}
         >
+          <Loading isLoading={loading}>
           <WrapperHeaderAccout>
             <UserOutlined style={{ fontSize: "30px" }} />
             {user?.name ? (
-              <div style={{ cursor: "pointer" }}>{user.name}</div>
+              <>
+              <Popover content={content} trigger="click">
+                <div style={{ cursor: "pointer" }}>{user.name}</div>
+              </Popover>
+              </>
             ) : (
               <div onClick={handleNavigateLogin} style={{ cursor: "pointer" }}>
                 <WrapperTextHeaderSmall>
@@ -58,6 +86,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               </div>
             )}
           </WrapperHeaderAccout>
+          </Loading>
           <div>
             <ShoppingCartOutlined
               style={{ fontSize: "30px", color: "#fff " }}
