@@ -9,7 +9,6 @@ import {
   WrapperTextHeader,
   WrapperTextHeaderSmall,
 } from "./style";
-import Search from "antd/es/transfer/search";
 import {
   UserOutlined,
   CaretDownOutlined,
@@ -18,11 +17,15 @@ import {
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import * as UserService from "../../services/UserService";
 import { resetUser } from '../../redux/slices/userSlice';
+import { searchProduct } from "../../redux/slices/productSlice";
 import Loading from "../LoadingComponent/Loading";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  console.log('user', user);
+
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const [userName, setUserName] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
@@ -53,6 +56,13 @@ const HeaderComponent = () => {
     </div>
   );
 
+  {/*Dùng cho ButtonInputSearch:*/ }
+  const onSearch = (event) => {
+    setSearch(event.target.value);
+    dispatch(searchProduct(event.target.value));
+
+  }
+
   return (
     <div>
       <WrapperHeader gutter={16}>
@@ -64,6 +74,7 @@ const HeaderComponent = () => {
             size="large"
             textButton="Tìm kiếm"
             placeholder="input search text"
+            onChange={onSearch}
 
           //onSearch={onSearch}
           />
@@ -84,7 +95,7 @@ const HeaderComponent = () => {
               ) : (
                 <UserOutlined style={{ fontSize: "30px" }} />
               )}
-              {userName ? (
+              {user?.access_token ? (
                 <>
                   <Popover content={content} trigger="click">
                     <div style={{ cursor: "pointer" }}>{userName?.length ? userName : user?.email}</div>

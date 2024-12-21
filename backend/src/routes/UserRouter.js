@@ -12,5 +12,5 @@ routes.put('/update-user/:id', authMiddleware, userController.updateUser);
 routes.delete('/delete-user/:id', authMiddleware, userController.deleteUser);
 routes.get('/get-all', authMiddleware, userController.getAllUser);
 routes.post('/refresh-token', userController.refreshToken);
-routes.delete('/delete-many', authMiddleware, userController.deleteManyUser);
+routes.post('/delete-many', authMiddleware, userController.deleteManyUser);
 module.exports = routes;

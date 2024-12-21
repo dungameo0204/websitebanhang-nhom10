@@ -1,5 +1,5 @@
-import { Col, Image, Row } from "antd";
-import React from "react";
+import { Col, Image, Rate, Row } from "antd";
+import React, { useState } from "react";
 import imageProduct from "../../assets/images/test.webp";
 import imageProductSmall from "../../assets/images/test-small.webp";
 import {
@@ -13,23 +13,52 @@ import {
   WrapperQualityProduct,
   WrapperInputNumber,
 } from "./style";
-import { StarFilled, PlusOutlined, MinusOutlined } from "@ant-design/icons";
+import { StarFilled, PlusOutlined, MinusOutlined, StarOutlined } from "@ant-design/icons";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
+import * as ProductService from "../../services/ProductService";
+import { useQuery } from '@tanstack/react-query';
+import Loading from "../LoadingComponent/Loading";
 
-const ProductDetailsComponent = () => {
-  const onChange = () => {};
+const ProductDetailsComponent = ({idProduct}) => {
+  const [numberOfProduct, setNumberOfProduct] = useState(1);
+  const onChange = (value) => {
+    console.log("debug", value);
+    setNumberOfProduct(Number(value));
+  };
+
+const fetchGetDetailedProduct = async (contextID) => {
+      const res = await ProductService.getDetailedProduct(contextID);
+      return res.data;
+  };
+
+  const handleChangeCount = (type) => {
+    if (type === 'increase') {
+      setNumberOfProduct(numberOfProduct + 1);
+    } else if (numberOfProduct > 1) { // Tránh số lượng âm
+      setNumberOfProduct(numberOfProduct - 1);
+    }
+  };
+
+
+const { isLoading, data: productDetails } = useQuery({
+      queryKey: ['product-details', idProduct],
+      queryFn: () => fetchGetDetailedProduct(idProduct),
+      enabled: !!idProduct,
+});
+
   return (
+    <Loading isLoading={isLoading}>
     <Row style={{ padding: "16px", background: "#fff", borderRadius: "4px" }}>
       <Col
         span={10}
         style={{ borderRight: "1px solid #e5e5e5", paddingRight: "8px" }}
       >
-        <Image src={imageProduct} alt="image product" preview={false} />
+        <Image src={productDetails?.image} alt="image product" preview={false} />
         <Row style={{ paddingTop: "10px", justifyContent: "space-between" }}>
           <WrapperStyleColImage span={4}>
             <WrapperStyleImageSmall
               src={imageProductSmall}
-              alt="image small"
+              alt="product image"
               preview={false}
             />
           </WrapperStyleColImage>
@@ -77,22 +106,14 @@ const ProductDetailsComponent = () => {
       </Col>
       <Col span={14} style={{ paddingLeft: "10px" }}>
         <WrapperStyleNameProduct>
-          Sách - Thám tử lừng danh Conan - Combo 10 tập từ tập 81 đến tập 90
+          {productDetails?.name}
         </WrapperStyleNameProduct>
         <div>
-          <StarFilled
-            style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
-          />
-          <StarFilled
-            style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
-          />
-          <StarFilled
-            style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
-          />
-          <WrapperStyleTextSell> | Da ban 1000+</WrapperStyleTextSell>
+        <Rate allowHalf value={productDetails?.rating} /> <span>{productDetails?.rating}</span>
+          <WrapperStyleTextSell> | Đã bán {productDetails?.selled}</WrapperStyleTextSell>
         </div>
         <WrapperPriceProduct>
-          <WrapperPriceTextProduct>200.0000</WrapperPriceTextProduct>
+          <WrapperPriceTextProduct>{productDetails?.price} đ</WrapperPriceTextProduct>
         </WrapperPriceProduct>
         <WrapperAddressProduct>
           <span>Giao đến </span>
@@ -109,16 +130,17 @@ const ProductDetailsComponent = () => {
         >
           <div style={{ marginBottom: "10px" }}>Số lượng</div>
           <WrapperQualityProduct>
-            <button style={{ border: "none", background: "transparent" }}>
-              <MinusOutlined style={{ color: "#000", fontSize: "20px" }} />
+            <button style={{ border: "none", background: "transparent", cursor: "pointer" }}>
+              <MinusOutlined style={{ color: "#000", fontSize: "20px" }} onClick={() => handleChangeCount('decrease')}/>
             </button>
             <WrapperInputNumber
-              defaultValue={3}
               onChange={onChange}
+              value={numberOfProduct}
+              defaultValue={0}
               size="small"
             />
-            <button style={{ border: "none", background: "transparent" }}>
-              <PlusOutlined style={{ color: "#000", fontSize: "20px" }} />
+            <button style={{ border: "none", background: "transparent", cursor: "pointer" }}>
+              <PlusOutlined style={{ color: "#000", fontSize: "20px" }} onClick={() => handleChangeCount('increase')} />
             </button>
           </WrapperQualityProduct>
         </div>
@@ -156,6 +178,7 @@ const ProductDetailsComponent = () => {
         </div>
       </Col>
     </Row>
+    </Loading>
   );
 };
 

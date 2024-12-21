@@ -26,6 +26,12 @@ export const userSlice = createSlice({
       state.access_token = access_token;
       state.isAdmin = isAdmin;
     },
+    // updateUser: (state, action) => {
+    //   const {name, email, access_token} = action.payload
+    //   state.name = name || email;
+    //   state.email = email;
+    //   state.access_token = access_token;
+    // },
     resetUser: (state) => {
       state.name = '';
       state.email = '';
