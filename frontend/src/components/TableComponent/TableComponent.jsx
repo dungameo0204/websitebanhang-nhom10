@@ -1,8 +1,14 @@
 import React from "react";
-import { Table, Radio, Divider } from "antd";
+import { Table } from "antd";
 import Loading from "../../components/LoadingComponent/Loading";
 
 const TableComponent = (props) => {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  const { selectionType = "checkbox", columns=[], data=[], isLoading=false } = props;
+=======
+>>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
   const { selectionType = 'checkbox' } = props
 
   const columns = [
@@ -46,29 +52,38 @@ const TableComponent = (props) => {
       address: 'Sydney No. 1 Lake Park',
     },
   ];
+>>>>>>> 05935e58035916abb951a1263c44a139b62d416d
 
+  //Khi người dùng thay đổi lựa chọn hàng (row) bằng checkbox
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        "selectedRows: ",
+        selectedRows
+      );
     },
+
     getCheckboxProps: (record) => ({
-      disabled: record.name === 'Disabled User',
-      // Column configuration not to be checked
-      name: record.name,
+      disabled: record.name === "Disabled User", // vô hiệu hoá check box với đối tượng hàng có tên là "Disabled User"
+      name: record.name,                         //Đặt tên checkbox là tên đối tượng hàng
     }),
   };
-  return (
-    <div>
-      <Table
-        rowSelection={{
-          type: selectionType,
-          ...rowSelection,
-        }}
-        columns={columns}
-        dataSource={data}
-      />
-    </div>
-  )
 
-}
+  {/* truyền giá trị biến rowselection vào ...rowselection */}
+  return (
+    <Loading isLoading= {isLoading}>
+      <Table
+      rowSelection={{
+        type: selectionType,
+        ...rowSelection,
+      }}
+      columns={columns}
+      dataSource={data}
+      {...props}
+      />
+    </Loading>
+  );
+};
+
 export default TableComponent;

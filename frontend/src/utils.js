@@ -25,6 +25,7 @@ export const renderOption = (arr) => {
     })
 
     return results
+<<<<<<< HEAD
 }
 
 //Thừa ----
@@ -48,4 +49,6 @@ export function getItem(label, key, icon, children, type) {
         label,
         type,
     };
+=======
+>>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
 }

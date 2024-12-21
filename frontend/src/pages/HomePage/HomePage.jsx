@@ -7,7 +7,11 @@ import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import { useQuery } from '@tanstack/react-query';
+<<<<<<< HEAD
 import { getAllProduct, getAllTypeProduct } from "../../services/ProductService"
+=======
+import {getAllProduct, getAllTypeProduct} from "../../services/ProductService"
+>>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
 import { useEffect } from "react";
 import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
@@ -23,9 +27,15 @@ const HomePage = () => {
     }
     const fetchAllTypeProduct = async () => {
         const res = await getAllTypeProduct()
+<<<<<<< HEAD
         if (res?.status === 'OK') {
             setTypeProducts(res?.data)
         }
+=======
+        if(res?.status === 'OK'){
+            setTypeProducts(res?.data)
+        }        
+>>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
     }
     const { isLoading, data: products } = useQuery({
         queryKey: ['product'],

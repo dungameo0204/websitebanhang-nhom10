@@ -22,6 +22,7 @@ import { Select } from "antd";
 
 const AdminProduct = () => {
   ///////////////////////////Xoá những func dưới sau khi đã update token
+<<<<<<< HEAD
   // const onUpdateProduct = () => {
   //   mutationUpdate.mutate(
   //     { id: rowSelected, productData: stateDetailedProduct },
@@ -52,6 +53,38 @@ const AdminProduct = () => {
   //     },
   //   });
   // };
+=======
+  const onUpdateProduct = () => {
+    mutationUpdate.mutate(
+      { id: rowSelected, productData: stateDetailedProduct },
+      {
+        onSettled: () => {
+          queryProduct.refetch();
+        },
+      }
+    );
+  };
+
+  const mutationUpdate = useMutationHooks((data) => {
+    const { id, productData } = data; //gán giá trị các thuộc tính vào biến có cùng tên
+    const res = ProductService.updateProduct(id, productData);
+    return res;
+  });
+
+  const mutationDelete = useMutationHooks((id) => {
+    /////////////////////////////////////////////// Mở lại sau khi đã có token
+    const res = ProductService.deleteProduct(id);
+    return res;
+  });
+
+  const handleDeleteProduct = () => {
+    mutationDelete.mutate(rowSelected, {
+      onSettled: () => {
+        queryProduct.refetch();
+      },
+    });
+  };
+>>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
 
   ///////////////////////////////////////////////////////////
 
@@ -115,6 +148,7 @@ const AdminProduct = () => {
   });
 
   //Update product mutation hooks
+<<<<<<< HEAD
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data; 
     const res = ProductService.updateProduct(
@@ -134,6 +168,27 @@ const AdminProduct = () => {
     return res;
    },
   );
+=======
+  // const mutationUpdate = useMutationHooks((data) => { /////////////////////////////////////////////// Mở lại sau khi đã có token
+  //   const { id, token, ...rests } = data; //gán giá trị các thuộc tính vào biến có cùng tên
+  //   const res = ProductService.updateProduct(
+  //     id,
+  //     token,
+  //     {...rests});
+  //   return res;
+  //  },
+  // );
+
+  //Delete product mutation hooks
+  // const mutationDelete = useMutationHooks((data) => { /////////////////////////////////////////////// Mở lại sau khi đã có token
+  //   const { id, token } = data; //gán giá trị các thuộc tính vào biến có cùng tên
+  //   const res = ProductService.deleteProduct(
+  //     id,
+  //     token);
+  //   return res;
+  //  },
+  // );
+>>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
 
   //Get mutation props:
   const { data, isPending, isError, isSuccess } = mutation;
@@ -335,6 +390,7 @@ const AdminProduct = () => {
   const handleDeleteCancel = () => {
     setIsDeleteModalOpen(false);
   };
+<<<<<<< HEAD
 
   const handleDeleteProduct = () => {
     mutationDelete.mutate({id: rowSelected, token: user?.access_token},{
@@ -344,6 +400,17 @@ const AdminProduct = () => {
     });
   }
 
+=======
+
+  // const handleDeleteProduct = () => {/////////////////////////////////////////////////////////////////////// Mở lại hàm sau khi đã thêm script kiểm tra token
+  //   mutationDelete.mutate({id: rowSelected, token: user?.access_token},{
+  //     onSettled: () => {
+  //       queryProduct.refetch();
+  //     }
+  //   });
+  // }
+
+>>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
   /*--- Handle Search ---*/
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {

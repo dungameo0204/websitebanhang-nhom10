@@ -77,5 +77,15 @@ export const deleteProduct = async (id, access_token) => {
 //         }
 //     })
 
+<<<<<<< HEAD
+=======
+// export const deleteManyProduct = async (data, access_token,) => {
+//     const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/product/delete-many`, data, {
+//         headers: {
+//             token: `Bearer  ${access_token}`,
+//         }
+//     })
+
+>>>>>>> bd266dde0a9c8ada150d2a2f6be657a2d635fceb
 //     return res.data
 // }
