@@ -35,6 +35,8 @@ const AdminUser = () => {
     email: "",
     phone: "",
     isAdmin: false,
+    avatar: "",
+    address: "",
   });
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const user = useSelector((state) => state?.user); //retrive from store redux
@@ -70,6 +72,16 @@ const AdminUser = () => {
    },
   );
 
+    //Delete many users mutation hooks
+    const mutationDeleteMany = useMutationHooks((data) => {
+      const { token, ...ids } = data; //gán giá trị các thuộc tính vào biến có cùng tên
+      const res = UserService.deleteManyUsers(
+        ids,
+        token);
+      return res;
+     },
+    );
+
   //Get mutation props:
   const {
     data: dataUpdated,
@@ -83,6 +95,12 @@ const AdminUser = () => {
     isError: isErrorDeleted,
     isSuccess: isSuccessDeleted,
   } = mutationDelete;
+  const {
+    data: dataManyDeleted,
+    isPending: isPendingManyDeleted,
+    isError: isErrorManyDeleted,
+    isSuccess: isSuccessManyDeleted,
+  } = mutationDeleteMany;
 
   //Form hook:
   const [formDrawer] = Form.useForm();
@@ -98,6 +116,8 @@ const AdminUser = () => {
         email: res?.data?.email,
         phone: res?.data?.phone,
         isAdmin: res?.data?.isAdmin,
+        address: res?.data?.address,
+        avatar: res?.data?.avatar,
       });
     }
     setIsLoadingUpdate(false);
@@ -153,7 +173,7 @@ const AdminUser = () => {
     });
   };
 
-  const handleImageInputDetailed = async ({ fileList }) => {
+  const handleOnchangeAvatarDetail = async ({ fileList }) => {
     const file = fileList[0];
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj); //chuyển ảnh thành URL tạm thời để có thể hiển thị ảnh ngay lập tức
@@ -161,7 +181,7 @@ const AdminUser = () => {
 
     setStateDetailedUser({
       ...stateDetailedUser,
-      image: file.preview,
+      avatar: file.preview,
     });
   };
 
@@ -180,6 +200,7 @@ const AdminUser = () => {
       name: "",
       type: "",
       phone: "",
+      address: "",
       isAdmin: false,
     });
     formDrawer.resetFields();
@@ -192,6 +213,15 @@ const AdminUser = () => {
 
   const handleDeleteUser = () => {
     mutationDelete.mutate({id: rowSelected, token: user?.access_token},{
+      onSettled: () => {
+        queryUser.refetch();
+      }
+    });
+  }
+
+  const handleDeleteManyUsers = (ids) => {
+    console.log("debug _ ids duoc truyen vao ham handleDeleteMany", {ids})
+    mutationDeleteMany.mutate({ids: ids, token: user?.access_token},{
       onSettled: () => {
         queryUser.refetch();
       }
@@ -323,6 +353,10 @@ const AdminUser = () => {
       ...getColumnSearchProps("phone"),
     },
     {
+      title: 'Address',
+      dataIndex: 'address',
+    },
+    {
       title: "Admin",
       dataIndex: "isAdmin",
       filters: [
@@ -384,11 +418,11 @@ const AdminUser = () => {
 
   //Dùng effect sau khi chọn row
   useEffect(() => {
-    if (rowSelected) {
+    if (rowSelected && isDrawerOpen) {
       setIsLoadingUpdate(true);
       fetchGetDetailsUser(rowSelected);
     }
-  }, [rowSelected]);
+  }, [rowSelected, isDrawerOpen]);
 
   //Dùng effect sau khi chọn trên delete modal
   useEffect(() => {
@@ -400,11 +434,21 @@ const AdminUser = () => {
     }
   }, [isSuccessDeleted, isErrorDeleted]);
 
+    //Dùng effect sau khi chọn trên delete many modal
+    useEffect(() => {
+      if (isSuccessManyDeleted && dataManyDeleted?.status === "OK") {
+        Message.success();
+      } else if (isErrorManyDeleted) {
+        Message.error();
+      }
+    }, [isSuccessManyDeleted]);
+
   return (
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
       <div style={{ marginTop: "10px" }}>
         <TableComponent
+          handleDeleteMany={handleDeleteManyUsers}
           columns={columns}
           data={dataTable}
           isLoading={isLoadingUsers} 
@@ -438,9 +482,6 @@ const AdminUser = () => {
             <Form.Item
               label="Name"
               name="name"
-              rules={[
-                { required: true, message: "Please input your name!" },
-              ]}
             >
               <InputComponent
                 name="name"
@@ -492,26 +533,27 @@ const AdminUser = () => {
                 onChange={handleOnChangeDetailed}
               />
             </Form.Item> */}
+            {/* Address field */}
+            <Form.Item
+              label="Address"
+              name="address"
+            >
+              <InputComponent name="address" value={stateDetailedUser.address} onChange={handleOnChangeDetailed} />
+            </Form.Item>
           {/* Avatar Field*/}
-            {/* <Form.Item
-              label="Image"
-              name="image"
-              rules={[
-                {
-                  required: true,
-                  message: "Please choose image",
-                },
-              ]}
+            <Form.Item
+              label="Avatar"
+              name="avatar"
             >
               <WrapperUploadFile
                 beforeUpload={() => false}
-                onChange={handleImageInputDetailed}
+                onChange={handleOnchangeAvatarDetail}
                 maxCount={1}
               >
                 <Button>Select File</Button>
-                {stateDetailedProduct.image && ( //Nhúng: nếu tồn tại image thì hiển thị
+                {stateDetailedUser.avatar && ( //Nhúng: nếu tồn tại avatar thì hiển thị
                   <img
-                    src={stateDetailedProduct?.image}
+                    src={stateDetailedUser?.avatar}
                     style={{
                       height: "60px",
                       width: "60px",
@@ -519,11 +561,11 @@ const AdminUser = () => {
                       objectFit: "cover",
                       marginLeft: "10px",
                     }}
-                    alt="product image"
+                    alt="avatar"
                   />
                 )}
               </WrapperUploadFile>
-            </Form.Item> */}
+            </Form.Item>
 
             {/* Submit button */}
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>

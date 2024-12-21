@@ -16,7 +16,6 @@ function App() {
   }
 
   const handleDecoded = (token) => {
-    console.log("debug", "token decode called")
     if(!token) {
       return {}
     }
@@ -31,7 +30,6 @@ function App() {
     let token = config.headers['token']?.split(' ')[1]; // Lấy token từ headers
 
     if(!token) {
-      console.log("debug", "Token not found in headers")
       token = localStorage.getItem('access_token');
     }
     const decoded = handleDecoded(token); //decode token vừa lấy được

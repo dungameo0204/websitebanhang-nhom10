@@ -76,8 +76,8 @@ const getDetailedProduct = (id) => {
             })
 
             if (product === null) {
-                reject({
-                    status: 'ERROR',
+                resolve({
+                    status: 'OK',
                     message: "Product not found"
                 });
             }
@@ -136,9 +136,10 @@ const getAllProduct = (page, limit, sortParams,filterParams) => {
 
             // Nếu DB sản phẩm rỗng
             if (allProduct.length === 0) {
-                reject({
-                    status: 'ERROR',
-                    message: "No product found"
+                resolve({
+                    status: 'OK',
+                    message: "No product found",
+                    data :[]
                 });
             }
 
@@ -238,13 +239,13 @@ const deleteManyProduct = (ids) => {
             })
             resolve({
                 status: 'OK',
-                message: 'DELETE SUCCESSFULLY',
+                message: 'PRODUCTS DELETED SUCCESSFULLY',
             });
 
         } catch (error) {
             reject({
                 status: 'ERROR',
-                message: error.message || 'An error occurred when deleting product item from service'
+                message: error.message || 'An error occurred when deleting product items from service'
             });
         }
     });

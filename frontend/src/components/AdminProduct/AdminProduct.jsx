@@ -101,6 +101,16 @@ const AdminProduct = () => {
    },
   );
 
+  //Delete many products mutation hooks
+  const mutationDeleteMany = useMutationHooks((data) => {
+    const { token, ...ids } = data; //gán giá trị các thuộc tính vào biến có cùng tên
+    const res = ProductService.deleteManyProducts(
+      ids,
+      token);
+    return res;
+   },
+  );
+
   //Get mutation props:
   const { data, isPending, isError, isSuccess } = mutation;
   const {
@@ -115,6 +125,12 @@ const AdminProduct = () => {
     isError: isErrorDeleted,
     isSuccess: isSuccessDeleted,
   } = mutationDelete;
+  const {
+    data: dataManyDeleted,
+    isPending: isPendingManyDeleted,
+    isError: isErrorManyDeleted,
+    isSuccess: isSuccessManyDeleted,
+  } = mutationDeleteMany;
 
   //Form hook:
   const [form] = Form.useForm(); //Dùng form hook để tạo instance của Form -> form
@@ -235,7 +251,7 @@ const AdminProduct = () => {
 
   //Get Products
   const getAllProducts = async () => {
-    const res = await ProductService.getAllProduct();
+    const res = await ProductService.getAllProduct(undefined, 0);
     return res;
   };
 
@@ -248,8 +264,6 @@ const AdminProduct = () => {
     queryKey: ["type-product"],
     queryFn: fetchAllTypeProduct,
   });
-
-  console.log("res", typeProduct);
 
   const { isPending: isLoadingProducts, data: products } = queryProduct;
 
@@ -275,7 +289,6 @@ const AdminProduct = () => {
   };
 
   const onUpdateProduct = () => { 
-    console.log("debug",user?.access_token)
     mutationUpdate.mutate({id: rowSelected, token: user?.access_token, ...stateDetailedProduct}, {
       onSettled : () =>{
         queryProduct.refetch();
@@ -305,6 +318,15 @@ const AdminProduct = () => {
 
   const handleDeleteProduct = () => {
     mutationDelete.mutate({id: rowSelected, token: user?.access_token},{
+      onSettled: () => {
+        queryProduct.refetch();
+      }
+    });
+  }
+
+  const handleDeleteManyProducts = (ids) => {
+    console.log("debug _ ids duoc truyen vao ham handleDeleteMany", {ids})
+    mutationDeleteMany.mutate({ids: ids, token: user?.access_token},{
       onSettled: () => {
         queryProduct.refetch();
       }
@@ -481,6 +503,11 @@ const AdminProduct = () => {
       },
     },
     {
+      title: 'Count In Stock',
+      dataIndex: 'countInStock',
+      sorter: (a, b) => a.countInStock - b.countInStock,
+    },
+    {
       title: "Type",
       dataIndex: "type",
       ...getColumnSearchProps("type"),
@@ -529,11 +556,11 @@ const AdminProduct = () => {
 
   //Dùng effect sau khi chọn row
   useEffect(() => {
-    if (rowSelected) {
+    if (rowSelected && isDrawerOpen) {
       setIsLoadingUpdate(true);
       fetchGetDetailedProduct(rowSelected);
     }
-  }, [rowSelected]);
+  }, [rowSelected, isDrawerOpen]);
 
   //Dùng effect sau khi chọn trên delete modal
   useEffect(() => {
@@ -544,6 +571,16 @@ const AdminProduct = () => {
       Message.error();
     }
   }, [isSuccessDeleted]);
+
+  //Dùng effect sau khi chọn trên delete many modal
+  useEffect(() => {
+    if (isSuccessManyDeleted && dataManyDeleted?.status === "OK") {
+      Message.success();
+    } else if (isErrorManyDeleted) {
+      Message.error();
+    }
+  }, [isSuccessManyDeleted]);
+
 
   return (
     <div>
@@ -563,6 +600,7 @@ const AdminProduct = () => {
       </div>
       <div style={{ marginTop: "20px" }}>
         <TableComponent
+          handleDeleteMany={handleDeleteManyProducts}
           columns={columns}
           data={dataTable}
           isLoading={isLoadingProducts}

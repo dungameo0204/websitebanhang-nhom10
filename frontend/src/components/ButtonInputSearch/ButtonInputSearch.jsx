@@ -11,21 +11,23 @@ const ButtonInputSearch = (props) => {
         backgroundColorInput = '#fff',
         backgroundColorButton = 'rgb(13,92,182)',
         colorButton = '#fff'
-    }
-        = props
+    } = props
+
     return (
-        <div style={{ display: 'flex', backgroundColor: '#fff' }}>
+        <div style={{ display: 'flex'}}>
             <InputComponent
                 size={size}
                 placeholder={placeholder}
                 style={{ backgroundColor: backgroundColorInput, border: 'none', borderRadius: '0' }}
+                {...props}
             />
             <ButtonComponent
                 size={size}
-                styleButton={{ backgroundColor: backgroundColorButton, border: 'none', borderRadius: '0', color: colorButton }}
-                icon={<SearchOutlined />}
+                styleButton={{ background: backgroundColorButton, border: 'none', borderRadius: '0' }}
+                icon={<SearchOutlined color = {colorButton} style={{color: '#fff'}} />}
                 textButton={textButton}
                 styleTextButton={{ color: colorButton }}
+                disabled={false}
             />
         </div>
     )
