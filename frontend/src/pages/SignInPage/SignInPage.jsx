@@ -14,13 +14,14 @@ import * as Message from "../../components/Message/Message";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slices/userSlice"
-
+import { useLocation } from "react-router-dom";
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const location = useLocation();
 
   //Mutation (For Signin)
   const mutation = useMutationHooks(
@@ -67,7 +68,11 @@ const SignInPage = () => {
   //Effect
   useEffect(() => {
     if (isSuccess) {
-      handleNavigateHomePage()
+      if (location?.state) {
+        navigate(location?.state)
+      } else {
+        handleNavigateHomePage()
+      }
       saveTokenInLocalStorage('access_token', data?.access_token)
       if (data?.access_token) {
         const decoded = jwtDecode(data?.access_token);

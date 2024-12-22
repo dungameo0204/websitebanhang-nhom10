@@ -18,6 +18,10 @@ import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import * as ProductService from "../../services/ProductService";
 import { useQuery } from '@tanstack/react-query';
 import Loading from "../LoadingComponent/Loading";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 
 const ProductDetailsComponent = ({idProduct}) => {
   const [numberOfProduct, setNumberOfProduct] = useState(1);
@@ -45,6 +49,16 @@ const { isLoading, data: productDetails } = useQuery({
       queryFn: () => fetchGetDetailedProduct(idProduct),
       enabled: !!idProduct,
 });
+
+const user = useSelector((state) => state.user);
+const navigator = useNavigate();
+const location = useLocation();
+const handleAddOrderProduct = () => {
+    console.log("debug_userSlice", user.name);
+    if (!user?.name){
+      navigator("/signin", {state: location?.pathname});
+    }
+  }
 
   return (
     <Loading isLoading={isLoading}>
@@ -155,6 +169,7 @@ const { isLoading, data: productDetails } = useQuery({
               border: "none",
               borderRadius: "4px",
             }}
+            onClick={handleAddOrderProduct}
             textButton={"Chọn mua"}
             styleTextButton={{
               color: "#fff",
