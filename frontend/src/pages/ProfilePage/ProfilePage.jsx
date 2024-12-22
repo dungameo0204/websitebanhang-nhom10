@@ -11,6 +11,7 @@ import * as message from '../../components/Message/Message'
 import Loading from '../../components/LoadingComponent/Loading'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import { updateUser } from '../../redux/slices/userSlice';
+import { Navigate } from 'react-router-dom';
 
 
 const ProfilePage = () => {
@@ -36,24 +37,24 @@ const ProfilePage = () => {
 
 
     useEffect(() => {
-        setLoading(true)
+        // setLoading(true)
         setEmail(user?.email)
         setName(user?.name)
         setPhone(user?.phone)
         setAddress(user?.address)
         setAvatar(user?.avatar)
-        setLoading(false)
+        //setLoading(false)
     }, [user])
 
     useEffect(() => {
-        setLoading(true)
+        //setLoading(true)
         if (isSuccess) {
             message.success()
             handleGetDetailsUser(user?.id, user?.access_token)
         } else if (isError) {
             message.error()
         }
-        setLoading(false)
+        //setLoading(false)
     }, [isSuccess, isError])
 
     const handleGetDetailsUser = async (id, token) => {
@@ -62,6 +63,9 @@ const ProfilePage = () => {
 
     }
 
+    const handleNavigateProf = () => {
+        Navigate("/profile-user");
+    };
     const handleOnchangeEmail = (value) => {
         setEmail(value)
     }
@@ -85,7 +89,10 @@ const ProfilePage = () => {
     }
 
     const handleUpdate = () => {
+
         mutation.mutate({ id: user?.id, email, name, phone, address, avatar, access_token: user?.access_token })
+        setLoading(true)
+        setLoading(false)
 
 
     }
