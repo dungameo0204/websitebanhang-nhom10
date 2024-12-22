@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Popover, Row } from "antd";
+import { Badge, Button, Col, Flex, Popover, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +28,7 @@ const HeaderComponent = () => {
   const [userName, setUserName] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
   const [loading, setLoading] = useState(false);
+  const order = useSelector((state) => state.order)
   const handleNavigateLogin = () => {
     navigate("/signin");
   };
@@ -59,6 +60,9 @@ const HeaderComponent = () => {
     setSearch(event.target.value);
     dispatch(searchProduct(event.target.value));
     
+  }
+  const handleNavigateOrder = () => {
+    navigate('/order')
   }
 
   return (
@@ -112,10 +116,12 @@ const HeaderComponent = () => {
               )}
             </WrapperHeaderAccout>
           </Loading>
-          <div>
+          <div onClick={handleNavigateOrder} style={{ cursor: 'pointer' }}>
+            <Badge count={order?.orderItems?.length} size="small">
             <ShoppingCartOutlined
               style={{ fontSize: "30px", color: "#fff " }}
             />
+              </Badge>
             <WrapperTextHeaderSmall>Giỏ Hàng</WrapperTextHeaderSmall>
           </div>
         </Col>

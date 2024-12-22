@@ -20,6 +20,7 @@ const HomePage = () => {
     const [typeProducts, setTypeProducts] = useState([])
     const [loading, setLoading] = useState(false)
     const [limit, setLimit] = useState(12)
+    
     const fetchProductAll = async (search, limit) => {
         const res = await getAllProduct(search,limit)         
             return res;

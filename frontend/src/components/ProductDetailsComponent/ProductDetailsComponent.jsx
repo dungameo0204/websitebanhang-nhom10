@@ -21,7 +21,8 @@ import Loading from "../LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { addOrderProduct } from "../../redux/slices/orderSlice";
 
 const ProductDetailsComponent = ({idProduct}) => {
   const [numberOfProduct, setNumberOfProduct] = useState(1);
@@ -53,13 +54,22 @@ const { isLoading, data: productDetails } = useQuery({
 const user = useSelector((state) => state.user);
 const navigator = useNavigate();
 const location = useLocation();
+const dispatch = useDispatch();
 const handleAddOrderProduct = () => {
     console.log("debug_userSlice", user.name);
     if (!user?.name){
       navigator("/signin", {state: location?.pathname});
+    } else{
+      dispatch(addOrderProduct({
+        name: productDetails?.name,
+        price: productDetails?.price,
+        amount: numberOfProduct,
+        image: productDetails?.image,
+        product: productDetails?._id
+      }));
     }
   }
-
+console.log("productDetails", productDetails);
   return (
     <Loading isLoading={isLoading}>
     <Row style={{ padding: "16px", background: "#fff", borderRadius: "4px" }}>
