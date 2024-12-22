@@ -9,7 +9,6 @@ import {
   WrapperTextHeader,
   WrapperTextHeaderSmall,
 } from "./style";
-import Search from "antd/es/transfer/search";
 import {
   UserOutlined,
   CaretDownOutlined,
@@ -17,12 +16,14 @@ import {
 } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import * as UserService from "../../services/UserService";
-import { resetUser } from '../../redux/slices/userSlice';
+import {resetUser} from '../../redux/slices/userSlice';
+import { searchProduct } from "../../redux/slices/productSlice";
 import Loading from "../LoadingComponent/Loading";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const [userName, setUserName] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
@@ -51,7 +52,14 @@ const HeaderComponent = () => {
       <WrapperContentPopup onClick={() => navigate('profile-user')}>Thông tin người dùng</WrapperContentPopup>
       <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
     </div>
-  );
+  );  
+
+  {/*Dùng cho ButtonInputSearch:*/}
+  const onSearch = (event) => {
+    setSearch(event.target.value);
+    dispatch(searchProduct(event.target.value));
+    
+  }
 
   return (
     <div>
@@ -64,6 +72,7 @@ const HeaderComponent = () => {
             size="large"
             textButton="Tìm kiếm"
             placeholder="input search text"
+            onChange={onSearch}
 
           //onSearch={onSearch}
           />

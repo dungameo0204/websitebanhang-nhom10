@@ -76,8 +76,12 @@ const getAllProduct = async (req, res) => {
     try {        
         // Lấy chỉ số page hiện tại từ query hoặc sử dụng giá trị mặc định
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 12;
-
+        let limit = parseInt(req.query.limit);
+        if(!limit){
+            limit = 12;
+        }else if(limit === 0){
+            limit = Infinity;
+        }
         // Lấy sort từ query
         const sortParams = req.query.sort;
       
@@ -134,11 +138,11 @@ const deleteProduct = async (req,res) => {
 const deleteManyProduct = async (req,res) => {
     try{
         const ids = req.body.ids;
-        console.log(ids);
+        
         if(!ids || ids.length === 0) {
             return res.status(400).json({
                 status: 'ERROR',
-                message: 'ProductIds is required'
+                message: 'ProductIds are required'
             })
         }
 
@@ -148,7 +152,7 @@ const deleteManyProduct = async (req,res) => {
     }catch (error){
         return res.status(500).json({
             status: 'ERROR',
-            message : error.message || 'An unexpected error occurred while deleting product'
+            message : error.message || 'An unexpected error occurred while deleting products'
         })
     }
 }

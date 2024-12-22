@@ -4,12 +4,18 @@ import { AdsBadge, StyledTextBadge, StyleNameProduct, WrapperCardStyle, WrapperD
 import {
     StarFilled
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 const CardComponent = (props) => {
-    const { countInStock, description, image, name, price, rating, type, discount, selled } = props
+    const { countInStock, description, image, name, price, rating, type, discount, selled, id } = props
+    const navigate = useNavigate()
+    const handleProductDetail = (id) => {
+        navigate(`/product-details/${id}`)
+    }
     return (
         <WrapperCardStyle
             hoverable
             //style={{ width: 240, header: { width: '200px', height: '200px' }, padding: '10px' }}
+            onClick={() => handleProductDetail(id)}
 
             cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
         >
@@ -20,10 +26,10 @@ const CardComponent = (props) => {
                 <span>
                     <span>{rating}</span> <StarFilled style={{ fontSize: '12px', color: 'yellow' }} />
                 </span>
-                <span>| Da ban {selled || 1000}+</span>
+                <span>| Đã bán {selled || 1000}+</span>
             </WrapperReportText>
             <WrapperPriceText>
-                <span style={{ marginRight: '8px' }}>{price}</span>
+                <span style={{ marginRight: '8px' }}>{price.toLocaleString()}</span>
                 <WrapperDiscountText>
                     {- discount || -5} %
                 </WrapperDiscountText>
