@@ -34,6 +34,12 @@ const HeaderComponent = () => {
     navigate("/signin");
   };
 
+  const handleNavigateProf = () => {
+    navigate("/profile-user");
+  };
+  const handleNavigateHomePage = () => {
+    navigate("/");
+  };
   const handleLogout = async () => {
     setLoading(true);
     localStorage.removeItem('access_token');
@@ -51,7 +57,7 @@ const HeaderComponent = () => {
   //Dùng cho Popover:
   const content = (
     <div>
-      <WrapperContentPopup onClick={() => navigate('profile-user')}>Thông tin người dùng</WrapperContentPopup>
+      <WrapperContentPopup onClick={handleNavigateProf}>Thông tin người dùng</WrapperContentPopup>
       <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
     </div>
   );
@@ -67,7 +73,7 @@ const HeaderComponent = () => {
     <div>
       <WrapperHeader gutter={16}>
         <Col span={6}>
-          <WrapperTextHeader>LAPTRINHWEB</WrapperTextHeader>
+          <WrapperTextHeader onClick={handleNavigateHomePage}>LAPTRINHWEB</WrapperTextHeader>
         </Col>
         <Col span={12}>
           <ButtonInputSearch
