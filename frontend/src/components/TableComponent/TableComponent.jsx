@@ -23,7 +23,7 @@ const TableComponent = (props) => {
     handleDeleteManyProducts(rowSelectedKeys); 
   }
 
-  {/* truyền giá trị biến rowselection vào ...rowselection */}
+  {/* truyền giá trị biến rowselection vào ...rowselection */ }
   return (
     <Loading isLoading={isLoading}>
       {rowSelectedKeys.length > 0 && (
@@ -47,6 +47,13 @@ const TableComponent = (props) => {
       </div>
       )}
       <Table
+        rowSelection={{
+          type: selectionType,
+          ...rowSelection,
+        }}
+        columns={columns}
+        dataSource={data}
+        {...props}
         rowSelection={{
           type: selectionType,
           ...rowSelection,

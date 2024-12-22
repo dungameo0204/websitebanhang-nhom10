@@ -8,12 +8,12 @@ export const getDetailedProduct = async (id) => {
 
 export const getAllProduct = async (search, limit) => {
     let res = {}
-    if(search?.length > 0) {
+    if (search?.length > 0) {
         res = await axios.get(`${process.env.REACT_APP_API_URL}/product/get-all?filter=name&filter=${search}&limit=${limit}`);
-    }else {
+    } else {
         res = await axios.get(`${process.env.REACT_APP_API_URL}/product/get-all?limit=${limit}`);
     }
-    
+
     return res.data;
 }
 
@@ -21,10 +21,10 @@ export const getProductsWithType = async (type, page, limit) => {
     if (type) {
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}`);
         return res.data
-    }else{
+    } else {
         console.log("no type detected - getProductsWithType - ProductSerice")
     }
-    
+
 }
 
 export const getAllTypeProduct = async () => {
@@ -34,14 +34,14 @@ export const getAllTypeProduct = async () => {
 }
 
 export const createProduct = async (data) => {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/product/create`,data);
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/product/create`, data);
     return res.data;
 }
 
 
 
 export const updateProduct = async (id, access_token, data) => {
-    const res = await axios.put(`${process.env.REACT_APP_API_URL}/product/update/${id}`, data,{
+    const res = await axios.put(`${process.env.REACT_APP_API_URL}/product/update/${id}`, data, {
         headers: {
             token: `Bearer ${access_token}`
         }
@@ -51,12 +51,12 @@ export const updateProduct = async (id, access_token, data) => {
 
 
 export const deleteProduct = async (id, access_token) => {
-        const res = await axios.delete(`${process.env.REACT_APP_API_URL}/product/delete/${id}` , {
-            headers: {
-                token: `Bearer ${access_token}`
-            }
-        });
-        return res.data;
+    const res = await axios.delete(`${process.env.REACT_APP_API_URL}/product/delete/${id}`, {
+        headers: {
+            token: `Bearer ${access_token}`
+        }
+    });
+    return res.data;
 }
 
 export const deleteManyProduct = async (data, access_token) => {
