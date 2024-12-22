@@ -39,8 +39,9 @@ export const WrapperUploadFile = styled(Upload)`
     border-radius: 50%;
   }
 
-  & .ant-upload-list-item-info {
-    display: none;
+  & .ant-upload-list.ant-upload-list-text {
+      display: none;
   }
 `
+
 

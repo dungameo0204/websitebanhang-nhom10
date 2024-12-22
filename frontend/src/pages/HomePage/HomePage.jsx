@@ -7,7 +7,7 @@ import slider2 from "../../assets/images/slider2.webp";
 import slider3 from "../../assets/images/slider3.webp";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import {getAllProduct, getAllTypeProduct} from "../../services/ProductService"
+import { getAllProduct, getAllTypeProduct } from "../../services/ProductService"
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import Loading from "../../components/LoadingComponent/Loading";
@@ -21,14 +21,14 @@ const HomePage = () => {
     const [loading, setLoading] = useState(false)
     const [limit, setLimit] = useState(12)
     const fetchProductAll = async (search, limit) => {
-        const res = await getAllProduct(search,limit)         
-            return res;
+        const res = await getAllProduct(search, limit)
+        return res;
     }
     const fetchAllTypeProduct = async () => {
         const res = await getAllTypeProduct()
-        if(res?.status === 'OK'){
+        if (res?.status === 'OK') {
             setTypeProducts(res?.data)
-        }        
+        }
     }
     const { isLoading, data: products } = useQuery({
         queryKey: ['product', limit, searchDebounce],
@@ -38,7 +38,7 @@ const HomePage = () => {
         placeholderData: keepPreviousData
     })
 
-    {/* Use Effect */}
+    {/* Use Effect */ }
     useEffect(() => {
         fetchAllTypeProduct()
     }, [])
@@ -79,7 +79,7 @@ const HomePage = () => {
                                     type={product.types}
                                     discount={product.discount}
                                     selled={product.selled}
-                                    id = {product._id}
+                                    id={product._id}
                                 />
                             )
                         })}
@@ -93,12 +93,12 @@ const HomePage = () => {
                         }}
                     >
                         <WrapperButtonMore
-                            disabled={isDisabled}                            
+                            disabled={isDisabled}
                             textButton={isDisabled ? "Đã hiển thị toàn bộ" : "Xem Thêm"}
                             type="outline"
                             styleButton={{
                                 border: "1px solid rgb(11, 116, 229)",
-                                Color: `${isDisabled? "##f2f3f4" :"rgb(11, 116, 229)" }` ,
+                                Color: `${isDisabled ? "##f2f3f4" : "rgb(11, 116, 229)"}`,
                                 width: "240px",
                                 height: "38px",
                                 borderRadius: "4px",

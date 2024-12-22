@@ -82,13 +82,13 @@ const AdminProduct = () => {
 
   //Update product mutation hooks
   const mutationUpdate = useMutationHooks((data) => {
-    const { id, token, ...rests } = data; 
+    const { id, token, ...rests } = data;
     const res = ProductService.updateProduct(
       id,
       token,
-      {...rests});
+      { ...rests });
     return res;
-   },
+  },
   );
 
   //Delete product mutation hooks
@@ -98,7 +98,7 @@ const AdminProduct = () => {
       id,
       token);
     return res;
-   },
+  },
   );
 
   //Delete many products mutation hooks
@@ -197,11 +197,11 @@ const AdminProduct = () => {
     return res;
   };
 
-  const handleChangeSelect = (value) => { 
-      setProductState({
-        ...productState,
-        type: value,
-      })
+  const handleChangeSelect = (value) => {
+    setProductState({
+      ...productState,
+      type: value,
+    })
   };
 
   /*--- HANDLE TABLE CONTENTS  ---*/
@@ -288,9 +288,9 @@ const AdminProduct = () => {
     });
   };
 
-  const onUpdateProduct = () => { 
-    mutationUpdate.mutate({id: rowSelected, token: user?.access_token, ...stateDetailedProduct}, {
-      onSettled : () =>{
+  const onUpdateProduct = () => {
+    mutationUpdate.mutate({ id: rowSelected, token: user?.access_token, ...stateDetailedProduct }, {
+      onSettled: () => {
         queryProduct.refetch();
       }
 
@@ -317,7 +317,7 @@ const AdminProduct = () => {
   };
 
   const handleDeleteProduct = () => {
-    mutationDelete.mutate({id: rowSelected, token: user?.access_token},{
+    mutationDelete.mutate({ id: rowSelected, token: user?.access_token }, {
       onSettled: () => {
         queryProduct.refetch();
       }
@@ -658,7 +658,7 @@ const AdminProduct = () => {
             </Form.Item>
 
             {/* Type field */}
-                {/* Type selection */}
+            {/* Type selection */}
             <Form.Item
               label="Type"
               name="type"
@@ -674,7 +674,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
 
-                {/* Add Type form */}
+            {/* Add Type form */}
             {productState.type === "add_type" && (
               <Form.Item
                 label='New Type'
@@ -683,11 +683,11 @@ const AdminProduct = () => {
                   { required: true, message: "Please input type of product!" },
                 ]}
               >
-                  <InputComponent
-                    value={productState.newType}
-                    onChange={handleOnChange}
-                    name="newType"
-                  />
+                <InputComponent
+                  value={productState.newType}
+                  onChange={handleOnChange}
+                  name="newType"
+                />
               </Form.Item>
             )}
 
