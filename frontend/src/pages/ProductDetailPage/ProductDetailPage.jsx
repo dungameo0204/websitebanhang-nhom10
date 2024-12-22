@@ -8,9 +8,8 @@ const ProductDetailsPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div
-      style={{ padding: "0 120px", background: "#efefef", height: "1000px" }}
-    >
+    <div style={{ height:'100vh', width: '100%', background: '#efefef' }}>
+      <div style = {{width: '1270px', margin: '0 auto', height: '100%'}}>
       <h5>
         <span 
           style={{
@@ -22,7 +21,8 @@ const ProductDetailsPage = () => {
             onMouseEnter={(e) => e.target.style.color = 'blue'}
             onMouseLeave={(e) => e.target.style.color = 'black'}
         >Trang chủ</span> <span> &gt; </span> Chi tiết sản phẩm</h5>
-      <ProductDetailsComponent idProduct = {id}/>
+        <ProductDetailsComponent idProduct = {id}/>
+      </div>
     </div>
   );
 };

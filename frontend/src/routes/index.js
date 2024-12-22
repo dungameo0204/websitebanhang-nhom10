@@ -1,8 +1,7 @@
 import AdminPage from "../pages/AdminPage/AdminPage";
 import HomePage from "../pages/HomePage/HomePage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
-import OderPage from "../pages/OderPage/OderPage";
-import ProductDetailsPage from "../pages/ProductDetailPage/ProductDetailPage";
+import OrderPage from "../pages/OrderPage/OrderPage";
 import ProductsPage from "../pages/ProductsPage/ProductsPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import SignInPage from "../pages/SignInPage/SignInPage";
@@ -18,7 +17,7 @@ export const routes = [
   },
   {
     path: "/order",
-    page: OderPage,
+    page: OrderPage,
     isShowHeader: true,
   },
   {

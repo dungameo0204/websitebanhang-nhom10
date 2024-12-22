@@ -1,11 +1,11 @@
-import { Button, Col, Flex, Popover, Row } from "antd";
+import { Badge, Button, Col, Flex, Popover, Row } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   WrapperContentPopup,
   WrapperHeader,
-  WrapperHeaderAccout,
+  WrapperHeaderAccount,
   WrapperTextHeader,
   WrapperTextHeaderSmall,
 } from "./style";
@@ -74,7 +74,7 @@ const HeaderComponent = () => {
           style={{ display: "flex", gap: "20px", alignItems: "center" }}
         >
           <Loading isLoading={loading}>
-          <WrapperHeaderAccout>
+          <WrapperHeaderAccount>
             <UserOutlined style={{ fontSize: "30px" }} />
             {user?.name ? (
               <>
@@ -93,12 +93,14 @@ const HeaderComponent = () => {
                 </div>
               </div>
             )}
-          </WrapperHeaderAccout>
+          </WrapperHeaderAccount>
           </Loading>
-          <div>
-            <ShoppingCartOutlined
+          <div onClick={() => navigate("/order")} style={{ cursor: "pointer" }}>
+            <Badge count={4} size="small">
+              <ShoppingCartOutlined
               style={{ fontSize: "30px", color: "#fff " }}
-            />
+              />
+            </Badge>
             <WrapperTextHeaderSmall>Giỏ Hàng</WrapperTextHeaderSmall>
           </div>
         </Col>

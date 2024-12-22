@@ -77,11 +77,14 @@ const getAllProduct = async (req, res) => {
         // Lấy chỉ số page hiện tại từ query hoặc sử dụng giá trị mặc định
         const page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit);
-        if(!limit){
-            limit = 12;
-        }else if(limit === 0){
+        console.log("debug", limit)
+
+        if(limit === 0){
             limit = Infinity;
+        }else if(!limit){
+            limit = 12;
         }
+
         // Lấy sort từ query
         const sortParams = req.query.sort;
       

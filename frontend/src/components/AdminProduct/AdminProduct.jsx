@@ -265,7 +265,7 @@ const AdminProduct = () => {
     queryFn: fetchAllTypeProduct,
   });
 
-  const { isPending: isLoadingProducts, data: products } = queryProduct;
+  const { isLoading: isLoadingProducts, data: products } = queryProduct;
 
   /*--- Handle Drawer ---*/
 
@@ -437,13 +437,16 @@ const AdminProduct = () => {
     //   ),
   });
 
+  console.log("debug", typeProduct?.data?.data);
+
   /*--- Handle Column and Row of Table ---*/
   //Column Processing
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      width: 500,
       ...getColumnSearchProps("name"),
     },
     {
@@ -480,26 +483,29 @@ const AdminProduct = () => {
       sorter: (a, b) => a.rating - b.rating,
       filters: [
         {
-          text: "> 4.7",
-          value: ">",
+          text: "0-1 sao",
+          value: "0-1",
         },
         {
-          text: "= 4.7",
-          value: "=",
+          text: "1-2 sao",
+          value: "1-2",
         },
         {
-          text: "< 4.7",
-          value: "<",
+          text: "2-3 sao",
+          value: "2-3",
+        },
+        {
+          text: "3-4 sao",
+          value: "3-4",
+        },
+        {
+          text: "4-5 sao",
+          value: "4-5",
         },
       ],
       onFilter: (value, record) => {
-        if (value === ">") {
-          return record.rating > 4.7;
-        } else if (value === "<") {
-          return record.rating < 4.7;
-        } else {
-          return record.rating == 4.7;
-        }
+        const [min, max] = value.split("-").map(Number); // Chia giá trị thành khoảng
+        return record.rating >= min && record.rating <= max; // Lọc trong khoảng
       },
     },
     {
@@ -510,7 +516,13 @@ const AdminProduct = () => {
     {
       title: "Type",
       dataIndex: "type",
-      ...getColumnSearchProps("type"),
+      filters: isLoadingProducts
+        ? []
+        : typeProduct?.data?.data?.map((typeName) => ({
+            text: typeName, 
+            value: typeName, 
+          })),
+      onFilter: (value, record) => record.type === value,
     },
     {
       title: "Action",
