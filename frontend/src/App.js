@@ -8,6 +8,7 @@ import { resetUser, updateUser } from "./redux/slices/userSlice"
 import { fetchCart, resetCart } from './redux/slices/cartSlice'
 import { useDispatch } from 'react-redux'
 import { jwtDecode } from "jwt-decode";
+import Footer from "./components/Footer/Footer";
 
 function App() {
 
@@ -111,7 +112,7 @@ function App() {
 
         </Routes>
       </Router>
-
+    <Footer />
 
     </div>
   )
