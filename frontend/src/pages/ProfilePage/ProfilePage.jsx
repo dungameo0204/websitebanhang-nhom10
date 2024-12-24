@@ -11,12 +11,14 @@ import * as message from '../../components/Message/Message'
 import Loading from '../../components/LoadingComponent/Loading'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import { updateUser } from '../../redux/slices/userSlice';
+import { Navigate } from 'react-router-dom';
 
 
 const ProfilePage = () => {
 
     const user = useSelector((state) => state.user)
     console.log('user', user);
+    const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('')
     const [name, setName] = useState('')
     const [phone, setPhone] = useState('')
@@ -26,7 +28,7 @@ const ProfilePage = () => {
     const mutation = useMutationHooks(
         (data) => {
             const { id, access_token, ...rests } = data
-            return UserService.updateUser(id, rests, access_token)
+            UserService.updateUser(id, access_token, rests)
         }
     )
     const { data, isPending, isSuccess, isError } = mutation
@@ -35,22 +37,24 @@ const ProfilePage = () => {
 
 
     useEffect(() => {
-
+        // setLoading(true)
         setEmail(user?.email)
         setName(user?.name)
         setPhone(user?.phone)
         setAddress(user?.address)
         setAvatar(user?.avatar)
-
+        //setLoading(false)
     }, [user])
 
     useEffect(() => {
+        //setLoading(true)
         if (isSuccess) {
             message.success()
             handleGetDetailsUser(user?.id, user?.access_token)
         } else if (isError) {
             message.error()
         }
+        //setLoading(false)
     }, [isSuccess, isError])
 
     const handleGetDetailsUser = async (id, token) => {
@@ -59,6 +63,9 @@ const ProfilePage = () => {
 
     }
 
+    const handleNavigateProf = () => {
+        Navigate("/profile-user");
+    };
     const handleOnchangeEmail = (value) => {
         setEmail(value)
     }
@@ -82,14 +89,17 @@ const ProfilePage = () => {
     }
 
     const handleUpdate = () => {
+
         mutation.mutate({ id: user?.id, email, name, phone, address, avatar, access_token: user?.access_token })
+        setLoading(true)
+        setLoading(false)
 
 
     }
     return (
         <div style={{ width: '1270px', margin: '0 auto', height: '500px' }}>
             <WrapperHeader>Thông tin người dùng </WrapperHeader>
-            <Loading isLoading={isPending}>
+            <Loading isLoading={loading}>
                 <WrapperContentProfile>
                     <WrapperInput>
                         <WrapperLabel htmlFor="name">Name</WrapperLabel>

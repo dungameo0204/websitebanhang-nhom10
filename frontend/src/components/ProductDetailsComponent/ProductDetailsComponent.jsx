@@ -16,18 +16,24 @@ import {
 import { StarFilled, PlusOutlined, MinusOutlined, StarOutlined } from "@ant-design/icons";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import * as ProductService from "../../services/ProductService";
+import * as CartService from "../../services/cartSevice"
 import { useQuery } from '@tanstack/react-query';
 import Loading from "../LoadingComponent/Loading";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addOrderProduct } from "../../redux/slices/orderSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { addCartProduct } from "../../redux/slices/cartSlice";
+import { convertPrice } from "../../utils";
+import { success, error } from "../Message/Message";
+
 
 const ProductDetailsComponent = ({idProduct}) => {
   const [numberOfProduct, setNumberOfProduct] = useState(1);
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+
   const onChange = (value) => {
-    console.log("debug", value);
     setNumberOfProduct(Number(value));
   };
 
@@ -39,7 +45,7 @@ const fetchGetDetailedProduct = async (contextID) => {
   const handleChangeCount = (type) => {
     if (type === 'increase') {
       setNumberOfProduct(numberOfProduct + 1);
-    } else if (numberOfProduct > 1) { // Tránh số lượng âm
+    } else if (numberOfProduct > 1) { 
       setNumberOfProduct(numberOfProduct - 1);
     }
   };
@@ -51,25 +57,38 @@ const { isLoading, data: productDetails } = useQuery({
       enabled: !!idProduct,
 });
 
-const user = useSelector((state) => state.user);
-const navigator = useNavigate();
-const location = useLocation();
-const dispatch = useDispatch();
-const handleAddOrderProduct = () => {
-    console.log("debug_userSlice", user.name);
-    if (!user?.name){
-      navigator("/signin", {state: location?.pathname});
-    } else{
-      dispatch(addOrderProduct({
+
+const addToCartDB = async (userId, access_token, cartItem, type) => {
+  const response = await CartService.changeCartItem(userId, access_token, cartItem, type);
+  return response;
+};
+
+const handleAddCartProduct = () => {
+  if(!user?.id){
+    navigate('/signin', {state: location?.pathname});
+  }else{
+
+    const cartItem  = {
         name: productDetails?.name,
-        price: productDetails?.price,
         amount: numberOfProduct,
         image: productDetails?.image,
+        price: productDetails?.price,
+        discount: productDetails?.discount,
         product: productDetails?._id
-      }));
     }
+
+    try {
+      addToCartDB(user?.id, user?.access_token, cartItem, "add");
+      dispatch(addCartProduct({cartItem}));
+      success('Sản phẩm đã được thêm vào giỏ hàng!');
+    }catch(error){
+      error("có lỗi xảy ra, xin thử lại sau")
+    }
+    
+    
   }
-console.log("productDetails", productDetails);
+}
+
   return (
     <Loading isLoading={isLoading}>
     <Row style={{ padding: "16px", background: "#fff", borderRadius: "4px" }}>
@@ -137,11 +156,11 @@ console.log("productDetails", productDetails);
           <WrapperStyleTextSell> | Đã bán {productDetails?.selled}</WrapperStyleTextSell>
         </div>
         <WrapperPriceProduct>
-          <WrapperPriceTextProduct>{productDetails?.price} đ</WrapperPriceTextProduct>
+          <WrapperPriceTextProduct>{convertPrice(productDetails?.price)} đ</WrapperPriceTextProduct>
         </WrapperPriceProduct>
         <WrapperAddressProduct>
           <span>Giao đến </span>
-          <span className="address">Q. 1, P. Bến Nghé, Hồ chí Minh</span> -
+          <span className="address">Đại học Bách khoa Hà Nội</span> -
           <span className="change-address">Đổi địa chỉ</span>
         </WrapperAddressProduct>
         <div
@@ -160,7 +179,7 @@ console.log("productDetails", productDetails);
             <WrapperInputNumber
               onChange={onChange}
               value={numberOfProduct}
-              defaultValue={0}
+              defaultValue={1}
               size="small"
             />
             <button style={{ border: "none", background: "transparent", cursor: "pointer" }}>
@@ -178,9 +197,10 @@ console.log("productDetails", productDetails);
               width: "220px",
               border: "none",
               borderRadius: "4px",
-            }}
-            onClick={handleAddOrderProduct}
-            textButton={"Chọn mua"}
+            }}           
+            onClick={handleAddCartProduct}
+            textButton={isLoading ? "Đang tải..." : "Chọn mua"}
+            disabled={isLoading}
             styleTextButton={{
               color: "#fff",
               fontSize: "15px",

@@ -1,5 +1,5 @@
-import { Button } from "antd";
-import React from "react";
+import { Button } from 'antd'
+import React from 'react'
 
 const ButtonComponent = ({ size, styleButton, styleTextButton, textButton,icon, disabled, ...rest }) => {
     return (
@@ -18,4 +18,4 @@ const ButtonComponent = ({ size, styleButton, styleTextButton, textButton,icon, 
     )
 }
 
-export default ButtonComponent;
+export default ButtonComponent

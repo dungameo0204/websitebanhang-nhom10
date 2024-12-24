@@ -9,46 +9,46 @@ import * as ProductService from "../../services/ProductService";
 import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../hooks/useDebounce";
+import { useQuery } from '@tanstack/react-query';
 
 const TypeProductPage = () => {
   const { state } = useLocation();
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState([]);
+  const searchedText = useSelector((state) => state?.product?.search);
+  const searchDebounce = useDebounce(searchedText, 500);
   const [paginate, setPaginate] = useState({
     page: 1,
     limit: 10,
     total: 1,
   });
 
-  //fetch Data
-  const fetchProductsWithType = async (type, page, limit) => {
-    setIsLoading(true);
-
-    const res = await ProductService.getProductsWithType(type, page, limit);
-    if (res?.status === "OK") {
-      setProducts(res?.data);
-      setIsLoading(false);
-
-      setPaginate((prevState) => ({
-        ...prevState,
-        total: res?.pagination?.totalProductNumber,
-      }));
-    } else {
-      setIsLoading(false);
-      console.log("error", "res not OK");
-    }
+  const fetchProductsAndUpdate = async (search, type, page, limit) => {
+    const res = await ProductService.getProductsWithType(search, type, page, limit);
+    setPaginate((prev) => ({
+      ...prev,
+      total: res?.pagination?.totalProductNumber,
+    }));
+    return res;
   };
 
-  //Khi lựa chọn trên Pagination
-  useEffect(() => {
-    if (state) {
-      fetchProductsWithType(state, paginate.page, paginate.limit);
-    }
-  }, [state, paginate.page, paginate.limit]);
+  const { isLoading, data: searchedProducts } = useQuery({
+    queryKey: ['searchedProducts', state, searchDebounce, paginate.page, paginate.limit],
+    queryFn: () => fetchProductsAndUpdate(searchDebounce, state, paginate.page, paginate.limit),
+    retry: 3,
+    retryDelay: 1000,
+    enabled: !!searchDebounce || !!state,
+  });  
 
-  const onChange = (current, pageSize) => {
-    setPaginate({ ...paginate, page: current, limit: pageSize });
+  const onChangePagination = (current, pageSize) => {
+    setPaginate((prev) => ({
+      ...prev,
+      page: current,
+      limit: pageSize,
+    }));
   };
+
+  // useEffect(() => {
+  //   console.log("debug_paginate", paginate.page, paginate.limit);
+  // }, [paginate]);
 
   return (
     <Loading isLoading={isLoading}>
@@ -56,7 +56,7 @@ const TypeProductPage = () => {
         style={{
           padding: "0 120px",
           background: "#efefef",
-          height: "calc(100vh-64px)",
+          height: "calc(100vh - 64px)",
         }}
       >
         <div
@@ -70,7 +70,7 @@ const TypeProductPage = () => {
             style={{
               flexWrap: "nowrap",
               paddingTop: "10px",
-              height: "calc(100%-20px)",
+              height: "calc(100% - 20px)",
             }}
           >
             <WrapperNavbar span={4}>
@@ -85,17 +85,17 @@ const TypeProductPage = () => {
               }}
             >
               <WrapperProducts>
-                {products?.map((product) => {
+                {searchedProducts?.data?.map((product) => {
                   return (
                     <CardComponent
-                      key={product._id}
+                      id={product._id}
                       countInStock={product.countInStock}
                       description={product.description}
                       image={product.image}
                       name={product.name}
                       price={product.price}
                       rating={product.rating}
-                      type={product.types}
+                      type={product.type}
                       discount={product.discount}
                       selled={product.selled}
                     />
@@ -106,7 +106,7 @@ const TypeProductPage = () => {
                 current={paginate?.page}
                 total={paginate?.total}
                 showSizeChanger={true}
-                onChange={onChange}
+                onChange={onChangePagination}
                 style={{ textAlign: "center", marginTop: "10px" }}
               />
             </Col>

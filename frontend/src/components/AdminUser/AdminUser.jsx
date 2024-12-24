@@ -509,9 +509,6 @@ const AdminUser = () => {
             <Form.Item
               label="Phone"
               name="phone"
-              rules={[
-                { required: true, message: "Please input your phone number!" },
-              ]}
             >
               <InputComponent
                 name="phone"
