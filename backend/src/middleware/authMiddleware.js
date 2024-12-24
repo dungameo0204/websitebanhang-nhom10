@@ -10,14 +10,14 @@ const authMiddleware = (req, res, next) => {
         return res.status(400).json({ message: 'no token - middleware' }); 
     }    
 
-    // Kiểm tra token khả thi
+    // Kiểm tra token khả thi 
     jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
         //check lỗi chung
         if (err) {
             return res.status(403).json({ message: 'authentication error - middleware' });
         }
         
-        //không thấy user trong kho
+        //không thấy user trong database
         if(!user){
             return res.status(404).json({ message: 'no user found - middleware' });
         }
