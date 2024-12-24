@@ -11,6 +11,7 @@ import {
 import imageLogo from "../../assets/images/logo-login.png";
 import { Image } from "antd";
 import * as UserService from "../../services/UserService";
+import * as CartService from "../../services/cartSevice";
 import * as Message from "../../components/Message/Message";
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import Loading from "../../components/LoadingComponent/Loading";
@@ -24,19 +25,24 @@ const SignUpPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   //Mutation (For SignUp)
-  const mutation = useMutationHooks(data => UserService.signupUser(data));
+  const mutation = useMutationHooks(data =>  UserService.signupUser(data));
 
   const { data, error, isPending, isSuccess, isError } = mutation;
 
+  const cartMutation = useMutationHooks(userID =>  CartService.createCart(userID));
+
+  const {data: cartData, isSuccess: isCartSuccess} = cartMutation
+
   //Effect (Message)
-  useEffect (() => {
-    if(isSuccess){
-      Message.success()
-      handleNavigateSignIn()
-    }else if (isError){
-      Message.error()
+  useEffect(() => {
+    if (isSuccess) {
+      handleInitCart(data?.data?.data._id);
+      Message.success();
+      handleNavigateSignIn();
+    } else if (isError) {
+      Message.error();
     }
-  }, [isSuccess, isError])
+  }, [isSuccess, isError]);
 
   const handleOnChangeEmail = (value) => {
     setEmail(value);
@@ -50,7 +56,6 @@ const SignUpPage = () => {
     setConfirmPassword(value);
   };
 
-
   //Chuyển hướng sau khi đã đăng ký thành công
   const handleNavigateSignIn = () => {
     navigate("/signin");
@@ -59,6 +64,10 @@ const SignUpPage = () => {
   const handleSignUp = () => {
     mutation.mutate({ email, password, confirmPassword });
   };
+
+  const handleInitCart = (newUserID) => {
+    cartMutation.mutate(newUserID)
+  }
 
   return (
     <div
@@ -86,7 +95,7 @@ const SignUpPage = () => {
             style={{ marginBottom: "15px" }}
             placeholder="abc@gmail.com"
             value={email}
-            handleOnChange={handleOnChangeEmail}
+            onChange={handleOnChangeEmail} // Correct prop name
           />
           <div style={{ position: "relative" }}>
             <span
@@ -105,7 +114,7 @@ const SignUpPage = () => {
               style={{ marginBottom: "10px" }}
               type={isShowPassword ? "text" : "password"}
               value={password}
-              handleOnChange={handleOnChangePassword}
+              onChange={handleOnChangePassword} // Correct prop name
             />
           </div>
           <div style={{ position: "relative" }}>
@@ -127,7 +136,7 @@ const SignUpPage = () => {
               type={isShowConfirmPassword ? "text" : "password"}
               style={{ marginBottom: "10px" }}
               value={confirmPassword}
-              handleOnChange={handleOnChangeConfirmPassword}
+              onChange={handleOnChangeConfirmPassword} // Correct prop name
             />
           </div>
           <Loading isLoading={isPending}>

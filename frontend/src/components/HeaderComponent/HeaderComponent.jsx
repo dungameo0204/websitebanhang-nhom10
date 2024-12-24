@@ -1,11 +1,11 @@
-import { Button, Col, Flex, Popover, Row } from "antd";
+import { Badge, Button, Col, Flex, Popover, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   WrapperContentPopup,
   WrapperHeader,
-  WrapperHeaderAccout,
+  WrapperHeaderAccount,
   WrapperTextHeader,
   WrapperTextHeaderSmall,
 } from "./style";
@@ -17,6 +17,7 @@ import {
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import * as UserService from "../../services/UserService";
 import { resetUser } from '../../redux/slices/userSlice';
+import { resetCart } from "../../redux/slices/cartSlice";
 import { searchProduct } from "../../redux/slices/productSlice";
 import Loading from "../LoadingComponent/Loading";
 
@@ -26,6 +27,7 @@ const HeaderComponent = () => {
   console.log('user', user);
 
   const [search, setSearch] = useState("");
+  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const [userName, setUserName] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
@@ -40,11 +42,19 @@ const HeaderComponent = () => {
   const handleNavigateHomePage = () => {
     navigate("/");
   };
+  const handleNavigateSystem = () => {
+    navigate("/system/admin");
+  }
+
+  const handleNavigateShoppingCart = () => {
+    navigate("/order");
+  }
   const handleLogout = async () => {
     setLoading(true);
     localStorage.removeItem('access_token');
     await UserService.logoutUser();
     dispatch(resetUser());
+    dispatch(resetCart());
     setLoading(false);
   }
 
@@ -54,9 +64,13 @@ const HeaderComponent = () => {
     setUserAvatar(user?.avatar)
     setLoading(false)
   }, [user?.name, user?.avatar])
+
   //Dùng cho Popover:
   const content = (
     <div>
+      { user?.isAdmin && (
+        <WrapperContentPopup onClick={handleNavigateSystem}>Quản lý hệ thống</WrapperContentPopup>
+      )}
       <WrapperContentPopup onClick={handleNavigateProf}>Thông tin người dùng</WrapperContentPopup>
       <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
     </div>
@@ -71,9 +85,9 @@ const HeaderComponent = () => {
 
   return (
     <div>
-      <WrapperHeader gutter={16}>
+      <WrapperHeader >
         <Col span={6}>
-          <WrapperTextHeader onClick={handleNavigateHomePage}>LAPTRINHWEB</WrapperTextHeader>
+          <WrapperTextHeader style={{cursor:'pointer'}} onClick={handleNavigateHomePage}>LAPTRINHWEB</WrapperTextHeader>
         </Col>
         <Col span={12}>
           <ButtonInputSearch
@@ -90,7 +104,7 @@ const HeaderComponent = () => {
           style={{ display: "flex", gap: "20px", alignItems: "center" }}
         >
           <Loading isLoading={loading}>
-            <WrapperHeaderAccout>
+            <WrapperHeaderAccount>
               {userAvatar ? (
                 <img src={userAvatar} alt="avatar" style={{
                   height: '30px',
@@ -118,12 +132,14 @@ const HeaderComponent = () => {
                   </div>
                 </div>
               )}
-            </WrapperHeaderAccout>
-          </Loading>
-          <div>
+            </WrapperHeaderAccount>
+            </Loading>
+          <div onClick={handleNavigateShoppingCart} style={{ cursor: "pointer" }}>
+            <Badge count={cart?.cartItems?.length} size="small">
             <ShoppingCartOutlined
               style={{ fontSize: "30px", color: "#fff " }}
             />
+            </Badge>
             <WrapperTextHeaderSmall>Giỏ Hàng</WrapperTextHeaderSmall>
           </div>
         </Col>

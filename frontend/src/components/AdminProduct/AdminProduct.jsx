@@ -33,6 +33,7 @@ const AdminProduct = () => {
     description: "",
     image: "",
     newType: "",
+    discount:"",
   });
 
   //Table content - Check Row Selected
@@ -48,6 +49,7 @@ const AdminProduct = () => {
     description: "",
     price: "",
     image: "",
+    discount: ""
   });
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const user = useSelector((state) => state?.user);
@@ -66,7 +68,7 @@ const AdminProduct = () => {
   /*--- Hooks ---*/
   //Create product mutation hooks
   const mutation = useMutationHooks((data) => {
-    const { name, type, countInStock, price, rating, description, image } =
+    const { name, type, countInStock, price, rating, description,discount, image } =
       data; //gán giá trị các thuộc tính vào biến có cùng tên
     const res = ProductService.createProduct({
       name,
@@ -75,6 +77,7 @@ const AdminProduct = () => {
       price,
       rating,
       description,
+      discount,
       image,
     });
     return res;
@@ -82,13 +85,13 @@ const AdminProduct = () => {
 
   //Update product mutation hooks
   const mutationUpdate = useMutationHooks((data) => {
-    const { id, token, ...rests } = data;
+    const { id, token, ...rests } = data; 
     const res = ProductService.updateProduct(
       id,
       token,
-      { ...rests });
+      {...rests});
     return res;
-  },
+   },
   );
 
   //Delete product mutation hooks
@@ -98,7 +101,7 @@ const AdminProduct = () => {
       id,
       token);
     return res;
-  },
+   },
   );
 
   //Delete many products mutation hooks
@@ -168,6 +171,7 @@ const AdminProduct = () => {
       price: productState.price,
       rating: productState.rating,
       description: productState.description,
+      discount: productState.discount,
       image: productState.image,
     }
     mutation.mutate(params, {
@@ -186,6 +190,7 @@ const AdminProduct = () => {
       price: "",
       rating: "",
       description: "",
+      discount: "",
       image: "",
     });
     form.resetFields();
@@ -197,11 +202,11 @@ const AdminProduct = () => {
     return res;
   };
 
-  const handleChangeSelect = (value) => {
-    setProductState({
-      ...productState,
-      type: value,
-    })
+  const handleChangeSelect = (value) => { 
+      setProductState({
+        ...productState,
+        type: value,
+      })
   };
 
   /*--- HANDLE TABLE CONTENTS  ---*/
@@ -216,6 +221,7 @@ const AdminProduct = () => {
         rating: res?.data?.rating,
         countInStock: res?.data?.countInStock,
         description: res?.data?.description,
+        discount: res?.data?.discount,
         price: res?.data?.price,
         image: res?.data?.image,
       });
@@ -265,7 +271,7 @@ const AdminProduct = () => {
     queryFn: fetchAllTypeProduct,
   });
 
-  const { isLoading: isLoadingProducts, data: products } = queryProduct;
+  const { isPending: isLoadingProducts, data: products } = queryProduct;
 
   /*--- Handle Drawer ---*/
 
@@ -288,9 +294,9 @@ const AdminProduct = () => {
     });
   };
 
-  const onUpdateProduct = () => {
-    mutationUpdate.mutate({ id: rowSelected, token: user?.access_token, ...stateDetailedProduct }, {
-      onSettled: () => {
+  const onUpdateProduct = () => { 
+    mutationUpdate.mutate({id: rowSelected, token: user?.access_token, ...stateDetailedProduct}, {
+      onSettled : () =>{
         queryProduct.refetch();
       }
 
@@ -306,6 +312,7 @@ const AdminProduct = () => {
       price: "",
       rating: "",
       description: "",
+      discount: "",
       image: "",
     });
     formDrawer.resetFields();
@@ -317,7 +324,7 @@ const AdminProduct = () => {
   };
 
   const handleDeleteProduct = () => {
-    mutationDelete.mutate({ id: rowSelected, token: user?.access_token }, {
+    mutationDelete.mutate({id: rowSelected, token: user?.access_token},{
       onSettled: () => {
         queryProduct.refetch();
       }
@@ -437,8 +444,6 @@ const AdminProduct = () => {
     //   ),
   });
 
-  console.log("debug", typeProduct?.data?.data);
-
   /*--- Handle Column and Row of Table ---*/
   //Column Processing
   const columns = [
@@ -512,6 +517,11 @@ const AdminProduct = () => {
       title: 'Count In Stock',
       dataIndex: 'countInStock',
       sorter: (a, b) => a.countInStock - b.countInStock,
+    },
+    {
+      title: 'Discount',
+      dataIndex: 'discount',
+      sorter: (a, b) => a.discount - b.discount,
     },
     {
       title: "Type",
@@ -658,7 +668,7 @@ const AdminProduct = () => {
             </Form.Item>
 
             {/* Type field */}
-            {/* Type selection */}
+                {/* Type selection */}
             <Form.Item
               label="Type"
               name="type"
@@ -674,7 +684,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
 
-            {/* Add Type form */}
+                {/* Add Type form */}
             {productState.type === "add_type" && (
               <Form.Item
                 label='New Type'
@@ -683,11 +693,11 @@ const AdminProduct = () => {
                   { required: true, message: "Please input type of product!" },
                 ]}
               >
-                <InputComponent
-                  value={productState.newType}
-                  onChange={handleOnChange}
-                  name="newType"
-                />
+                  <InputComponent
+                    value={productState.newType}
+                    onChange={handleOnChange}
+                    name="newType"
+                  />
               </Form.Item>
             )}
 
@@ -750,6 +760,18 @@ const AdminProduct = () => {
               <InputComponent
                 name="description"
                 value={productState.description}
+                onChange={handleOnChange}
+              />
+            </Form.Item>
+
+            {/* Discount field */}
+            <Form.Item
+              label="Discount"
+              name="discount"
+            >
+              <InputComponent
+                name="discount"
+                value={productState.discount}
                 onChange={handleOnChange}
               />
             </Form.Item>
@@ -902,6 +924,18 @@ const AdminProduct = () => {
               <InputComponent
                 name="description"
                 value={stateDetailedProduct.description}
+                onChange={handleOnChangeDetailed}
+              />
+            </Form.Item>
+
+            {/* Discount field */}
+            <Form.Item
+              label="Discount"
+              name="discount"
+            >
+              <InputComponent
+                name="discount"
+                value={stateDetailedProduct.discount}
                 onChange={handleOnChangeDetailed}
               />
             </Form.Item>

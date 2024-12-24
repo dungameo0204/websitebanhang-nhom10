@@ -1,9 +1,11 @@
 import React, { Fragment, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { routes } from './routes'
-import DefaultComonent from './components/DefaultComponent/DefaultComonent'
+import DefaultComponent from './components/DefaultComponent/DefaultComonent'
 import * as UserService from "./services/UserService"
-import { updateUser } from "./redux/slices/userSlice"
+import * as CartService from "./services/cartSevice"
+import { resetUser, updateUser } from "./redux/slices/userSlice"
+import { fetchCart, resetCart } from './redux/slices/cartSlice'
 import { useDispatch } from 'react-redux'
 import { jwtDecode } from "jwt-decode";
 
@@ -22,9 +24,14 @@ function App() {
     return jwtDecode(token);
   }
 
+  const handleLogout = async () => {
+    localStorage.removeItem('access_token');
+    dispatch(resetUser());
+    dispatch(resetCart());
+  }
+
   //Interceptor Axios
   UserService.axiosJWT.interceptors.request.use(async (config) => {
-
     const currentTime = new Date();
 
     let token = config.headers['token']?.split(' ')[1]; // Lấy token từ headers
@@ -34,10 +41,19 @@ function App() {
     }
     const decoded = handleDecoded(token); //decode token vừa lấy được
     if (decoded?.exp < currentTime.getTime() / 1000) {
-      const data = await UserService.refreshToken();
-      saveTokenInLocalStorage('access_token', data?.access_token); //cập nhật local storage
-      dispatch(updateUser({ access_token: data?.access_token }));
-      config.headers['token'] = `Bearer ${data?.access_token}`
+      try{
+        const data = await UserService.refreshToken();
+        if (!data){
+          handleLogout()
+        } else{
+          saveTokenInLocalStorage('access_token', data?.access_token); //cập nhật local storage
+          dispatch(updateUser({ access_token: data?.access_token }));
+          config.headers['token'] = `Bearer ${data?.access_token}`
+        }
+      }catch (error){
+        console.log("Error When Refreshing token", error)
+        handleLogout()
+      }  
     }
 
     return config;
@@ -50,9 +66,9 @@ function App() {
   //User Details
   const handleGetDetailsUser = async (id, token) => {
     const res = await UserService.getDetailsUser(id, token);
-    const localStorageToken = localStorage.getItem('access_token'); //lấy giá trị token mới nhất từ local 
+    const localStorageToken = localStorage.getItem('access_token'); //lấy giá trị token mới nhất từ local
     dispatch(updateUser({ ...res?.data, access_token: localStorageToken })); // cập nhật lại store với data và token mới nhất
-
+    handleFetchCart(id, localStorageToken);
   }
 
   //Dùng để lấy token từ local và extract ra
@@ -60,6 +76,12 @@ function App() {
     const localStorageToken = localStorage.getItem('access_token');
     const decoded = handleDecoded(localStorageToken);
     return { localStorageToken, decoded }
+  }
+
+  //cart
+  const handleFetchCart = async (id, token) => {
+    const res = await CartService.getCart(id, token);
+    dispatch(fetchCart({ cartItems: res?.data?.cartItems, user: id }));
   }
 
   useEffect(() => {
@@ -76,7 +98,7 @@ function App() {
           {routes.map((route) => {
             const Page = route.page
             // const isCheckAuth = !route.isPrivate
-            const Layout = route.isShowHeader ? DefaultComonent : Fragment
+            const Layout = route.isShowHeader ? DefaultComponent : Fragment
             return (
               <Route key={route.path} path={route.path} element={
                 <Layout>

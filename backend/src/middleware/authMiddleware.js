@@ -34,6 +34,7 @@ const authMiddleware = (req, res, next) => {
 
 //Đây là middleWare để xác thực user dựa vào access_token
 const authUserMiddleware = (req, res, next) => {
+    
     const token = req.headers.token?.split(' ')[1];
     const userID = req.params.id;
     if(!token){ 

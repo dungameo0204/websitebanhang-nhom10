@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 
 const createProduct = async (req,res) => {
     try{
-        const {name, image, type, price, countInStock, rating, description} = req.body
+        const {name, image, type, price, countInStock, rating, description, discount} = req.body
 
         //Nếu thiếu input thì báo input lỗi
-        if(!name || !image || !type || !price || !countInStock || !rating || !description){
+        if(!name || !image || !type || !price || !countInStock || !rating || !description || !discount){
             return res.status(400).json({
                 status: 'ERROR',
                 message: 'The input is required'
@@ -77,7 +77,6 @@ const getAllProduct = async (req, res) => {
         // Lấy chỉ số page hiện tại từ query hoặc sử dụng giá trị mặc định
         const page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit);
-        console.log("debug", limit)
 
         if(limit === 0){
             limit = Infinity;

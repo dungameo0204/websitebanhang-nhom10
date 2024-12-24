@@ -5,6 +5,7 @@ import { InputNumber } from "antd";
 export const WrapperStyleImageSmall = styled(Image)`
   height: 64px;
   width: 64px;
+  object-fit: cover;
 `;
 
 export const WrapperStyleColImage = styled(Col)`
