@@ -12,7 +12,7 @@ function Footer() {
             <hr />
             <div className="footer-logo">
                 <img src={footer_logo} alt="" />
-                <p>SHOPPER</p>
+                <p>TIKA</p>
             </div>
             <ul className="footer-links">
                 <li>Company</li>
@@ -31,11 +31,11 @@ function Footer() {
                 </a>
 
                 <a href="https://www.pinterest.com/" target="_blank" rel="noopener noreferrer">
-                    <img src={instagram_icon} alt="Instagram icon" width="30" height="30" />
+                    <img src={pintester_icon} alt="Instagram icon" width="30" height="30" />
                 </a>
 
                 <a href="https://web.whatsapp.com/" target="_blank" rel="noopener noreferrer">
-                    <img src={instagram_icon} alt="whatsapp_icon" width="30" height="30" />
+                    <img src={whatsapp_icon} alt="whatsapp_icon" width="30" height="30" />
                 </a>
 
             </div>

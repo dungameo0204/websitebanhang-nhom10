@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AdminUser from "../../components/AdminUser/AdminUser";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
 import { Menu } from "antd";
+import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
 
 const AdminPage = () => {
   const items = [
@@ -45,6 +46,7 @@ const AdminPage = () => {
 
   return (
     <>
+      <HeaderComponent />
       <div style={{ display: "flex" }}>
         <Menu
           mode="inline"

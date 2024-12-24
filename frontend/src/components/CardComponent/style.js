@@ -9,6 +9,9 @@ export const WrapperCardStyle = styled(Card)`
   }
 `;
 export const StyleNameProduct = styled.div`
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;  
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;

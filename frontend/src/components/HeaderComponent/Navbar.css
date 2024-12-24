@@ -1,0 +1,33 @@
+.nav-container .navbar {
+    align-items: center;
+    display: flex;
+    height: 64px;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+}
+
+.nav-brand {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    min-height: 3.25rem;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.nav-logo {
+    align-items: center;
+    display: flex;
+    flex-grow: 0;
+    flex-shrink: 0;
+    line-height: 1.5;
+    padding: .5rem .75rem;
+    position: relative;
+}
+
+.nav-logo img {
+    height: 40px;
+}

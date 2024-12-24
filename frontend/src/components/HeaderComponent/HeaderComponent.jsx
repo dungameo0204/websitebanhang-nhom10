@@ -1,11 +1,11 @@
-import { Button, Col, Flex, Popover, Row } from "antd";
+import { Badge, Button, Col, Flex, Popover, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   WrapperContentPopup,
   WrapperHeader,
-  WrapperHeaderAccout,
+  WrapperHeaderAccount,
   WrapperTextHeader,
   WrapperTextHeaderSmall,
 } from "./style";
@@ -17,19 +17,23 @@ import {
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import * as UserService from "../../services/UserService";
 import { resetUser } from '../../redux/slices/userSlice';
+import { resetCart } from "../../redux/slices/cartSlice";
 import { searchProduct } from "../../redux/slices/productSlice";
 import Loading from "../LoadingComponent/Loading";
-
+import logo from '../../assets/images/logo_big.png'
+import './Navbar.css'
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   console.log('user', user);
 
   const [search, setSearch] = useState("");
+  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const [userName, setUserName] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
   const [loading, setLoading] = useState(false);
+  const order = useSelector((state) => state.order)
   const handleNavigateLogin = () => {
     navigate("/signin");
   };
@@ -40,11 +44,19 @@ const HeaderComponent = () => {
   const handleNavigateHomePage = () => {
     navigate("/");
   };
+  const handleNavigateSystem = () => {
+    navigate("/system/admin");
+  }
+
+  const handleNavigateShoppingCart = () => {
+    navigate("/order");
+  }
   const handleLogout = async () => {
     setLoading(true);
     localStorage.removeItem('access_token');
     await UserService.logoutUser();
     dispatch(resetUser());
+    dispatch(resetCart());
     setLoading(false);
   }
 
@@ -54,9 +66,13 @@ const HeaderComponent = () => {
     setUserAvatar(user?.avatar)
     setLoading(false)
   }, [user?.name, user?.avatar])
+
   //Dùng cho Popover:
   const content = (
     <div>
+      {user?.isAdmin && (
+        <WrapperContentPopup onClick={handleNavigateSystem}>Quản lý hệ thống</WrapperContentPopup>
+      )}
       <WrapperContentPopup onClick={handleNavigateProf}>Thông tin người dùng</WrapperContentPopup>
       <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
     </div>
@@ -68,13 +84,28 @@ const HeaderComponent = () => {
     dispatch(searchProduct(event.target.value));
 
   }
+  const handleNavigateOrder = () => {
+    navigate('/order')
+  }
 
   return (
-    <div>
-      <WrapperHeader gutter={16}>
-        <Col span={6}>
-          <WrapperTextHeader onClick={handleNavigateHomePage}>LAPTRINHWEB</WrapperTextHeader>
+    <div className="nav-container">
+      <WrapperHeader className='navbar'>
+        <Col span={6} style={{
+          display: "flex",
+          gap: "20px",
+          alignItems: "center",
+          justifyContent: "flex-end", // Căn sang phải
+        }}>
+          <a href='/' aria-current="page" className='nav-brand'>
+            <div className="nav-logo">
+              <img src={logo} alt="" />
+            </div>
+            <WrapperTextHeader style={{ cursor: 'pointer' }} onClick={handleNavigateHomePage}>TIKA</WrapperTextHeader>
+          </a>
+
         </Col>
+
         <Col span={12}>
           <ButtonInputSearch
             size="large"
@@ -90,7 +121,7 @@ const HeaderComponent = () => {
           style={{ display: "flex", gap: "20px", alignItems: "center" }}
         >
           <Loading isLoading={loading}>
-            <WrapperHeaderAccout>
+            <WrapperHeaderAccount>
               {userAvatar ? (
                 <img src={userAvatar} alt="avatar" style={{
                   height: '30px',
@@ -118,12 +149,14 @@ const HeaderComponent = () => {
                   </div>
                 </div>
               )}
-            </WrapperHeaderAccout>
+            </WrapperHeaderAccount>
           </Loading>
-          <div>
-            <ShoppingCartOutlined
-              style={{ fontSize: "30px", color: "#fff " }}
-            />
+          <div onClick={handleNavigateShoppingCart} style={{ cursor: "pointer" }}>
+            <Badge count={cart?.cartItems?.length} size="small">
+              <ShoppingCartOutlined
+                style={{ fontSize: "30px", color: "#fff " }}
+              />
+            </Badge>
             <WrapperTextHeaderSmall>Giỏ Hàng</WrapperTextHeaderSmall>
           </div>
         </Col>

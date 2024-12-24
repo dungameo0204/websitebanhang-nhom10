@@ -29,19 +29,6 @@ export const renderOption = (arr) => {
     return results
 }
 
-//Thừa ----
-// export const isJsonString = (data) => {
-//     console.log('debug', data)
-//     // if (typeof data !== "string") return false;
-
-//     try {
-//         JSON.parse(data)
-//     } catch (error) {
-//         return false
-//     }
-//     return true
-// }
-
 export function getItem(label, key, icon, children, type) {
     return {
         key,
@@ -50,5 +37,14 @@ export function getItem(label, key, icon, children, type) {
         label,
         type,
     };
+}
+
+export const convertPrice = (price) => {
+    try {
+        const result = price?.toLocaleString().replaceAll(',','.');
+        return `${result} VND`;
+    }catch (error) {
+        return null;
+    }
 }
 

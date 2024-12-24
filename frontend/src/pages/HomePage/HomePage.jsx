@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import Loading from "../../components/LoadingComponent/Loading";
 import { useDebounce } from "../../hooks/useDebounce";
+import Footer from "../../components/Footer/Footer";
 
 const HomePage = () => {
     const searchProduct = useSelector((state) => state?.product?.search)
@@ -20,6 +21,7 @@ const HomePage = () => {
     const [typeProducts, setTypeProducts] = useState([])
     const [loading, setLoading] = useState(false)
     const [limit, setLimit] = useState(12)
+
     const fetchProductAll = async (search, limit) => {
         const res = await getAllProduct(search, limit)
         return res;
@@ -107,6 +109,7 @@ const HomePage = () => {
                             onClick={() => setLimit((prev) => prev + 12)}
                         />
                     </div>
+                    <Footer />
                 </div>
             </div>
 

@@ -33,6 +33,7 @@ const AdminProduct = () => {
     description: "",
     image: "",
     newType: "",
+    discount:"",
   });
 
   //Table content - Check Row Selected
@@ -48,6 +49,7 @@ const AdminProduct = () => {
     description: "",
     price: "",
     image: "",
+    discount: ""
   });
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const user = useSelector((state) => state?.user);
@@ -66,7 +68,7 @@ const AdminProduct = () => {
   /*--- Hooks ---*/
   //Create product mutation hooks
   const mutation = useMutationHooks((data) => {
-    const { name, type, countInStock, price, rating, description, image } =
+    const { name, type, countInStock, price, rating, description,discount, image } =
       data; //gán giá trị các thuộc tính vào biến có cùng tên
     const res = ProductService.createProduct({
       name,
@@ -75,6 +77,7 @@ const AdminProduct = () => {
       price,
       rating,
       description,
+      discount,
       image,
     });
     return res;
@@ -82,13 +85,13 @@ const AdminProduct = () => {
 
   //Update product mutation hooks
   const mutationUpdate = useMutationHooks((data) => {
-    const { id, token, ...rests } = data;
+    const { id, token, ...rests } = data; 
     const res = ProductService.updateProduct(
       id,
       token,
-      { ...rests });
+      {...rests});
     return res;
-  },
+   },
   );
 
   //Delete product mutation hooks
@@ -98,7 +101,7 @@ const AdminProduct = () => {
       id,
       token);
     return res;
-  },
+   },
   );
 
   //Delete many products mutation hooks
@@ -136,6 +139,16 @@ const AdminProduct = () => {
   const [form] = Form.useForm(); //Dùng form hook để tạo instance của Form -> form
   const [formDrawer] = Form.useForm();
 
+
+  //handle delete many
+  const handleDeleteManyProduct = (ids) => {
+    mutationDeleteMany.mutate({ids: ids, token: user?.access_token}, {
+      onSettled: () => {
+        queryProduct.refetch();
+      },
+    });
+  };
+
   /*--- HANDLE FORM ---*/
 
   //Input Form func
@@ -168,6 +181,7 @@ const AdminProduct = () => {
       price: productState.price,
       rating: productState.rating,
       description: productState.description,
+      discount: productState.discount,
       image: productState.image,
     }
     mutation.mutate(params, {
@@ -186,6 +200,7 @@ const AdminProduct = () => {
       price: "",
       rating: "",
       description: "",
+      discount: "",
       image: "",
     });
     form.resetFields();
@@ -197,11 +212,11 @@ const AdminProduct = () => {
     return res;
   };
 
-  const handleChangeSelect = (value) => {
-    setProductState({
-      ...productState,
-      type: value,
-    })
+  const handleChangeSelect = (value) => { 
+      setProductState({
+        ...productState,
+        type: value,
+      })
   };
 
   /*--- HANDLE TABLE CONTENTS  ---*/
@@ -216,6 +231,7 @@ const AdminProduct = () => {
         rating: res?.data?.rating,
         countInStock: res?.data?.countInStock,
         description: res?.data?.description,
+        discount: res?.data?.discount,
         price: res?.data?.price,
         image: res?.data?.image,
       });
@@ -288,9 +304,9 @@ const AdminProduct = () => {
     });
   };
 
-  const onUpdateProduct = () => {
-    mutationUpdate.mutate({ id: rowSelected, token: user?.access_token, ...stateDetailedProduct }, {
-      onSettled: () => {
+  const onUpdateProduct = () => { 
+    mutationUpdate.mutate({id: rowSelected, token: user?.access_token, ...stateDetailedProduct}, {
+      onSettled : () =>{
         queryProduct.refetch();
       }
 
@@ -306,6 +322,7 @@ const AdminProduct = () => {
       price: "",
       rating: "",
       description: "",
+      discount: "",
       image: "",
     });
     formDrawer.resetFields();
@@ -317,7 +334,7 @@ const AdminProduct = () => {
   };
 
   const handleDeleteProduct = () => {
-    mutationDelete.mutate({ id: rowSelected, token: user?.access_token }, {
+    mutationDelete.mutate({id: rowSelected, token: user?.access_token},{
       onSettled: () => {
         queryProduct.refetch();
       }
@@ -443,7 +460,8 @@ const AdminProduct = () => {
     {
       title: "Name",
       dataIndex: "name",
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      width: 500,
       ...getColumnSearchProps("name"),
     },
     {
@@ -480,26 +498,29 @@ const AdminProduct = () => {
       sorter: (a, b) => a.rating - b.rating,
       filters: [
         {
-          text: "> 4.7",
-          value: ">",
+          text: "0-1 sao",
+          value: "0-1",
         },
         {
-          text: "= 4.7",
-          value: "=",
+          text: "1-2 sao",
+          value: "1-2",
         },
         {
-          text: "< 4.7",
-          value: "<",
+          text: "2-3 sao",
+          value: "2-3",
+        },
+        {
+          text: "3-4 sao",
+          value: "3-4",
+        },
+        {
+          text: "4-5 sao",
+          value: "4-5",
         },
       ],
       onFilter: (value, record) => {
-        if (value === ">") {
-          return record.rating > 4.7;
-        } else if (value === "<") {
-          return record.rating < 4.7;
-        } else {
-          return record.rating == 4.7;
-        }
+        const [min, max] = value.split("-").map(Number); // Chia giá trị thành khoảng
+        return record.rating >= min && record.rating <= max; // Lọc trong khoảng
       },
     },
     {
@@ -508,9 +529,20 @@ const AdminProduct = () => {
       sorter: (a, b) => a.countInStock - b.countInStock,
     },
     {
+      title: 'Discount',
+      dataIndex: 'discount',
+      sorter: (a, b) => a.discount - b.discount,
+    },
+    {
       title: "Type",
       dataIndex: "type",
-      ...getColumnSearchProps("type"),
+      filters: isLoadingProducts
+        ? []
+        : typeProduct?.data?.data?.map((typeName) => ({
+            text: typeName, 
+            value: typeName, 
+          })),
+      onFilter: (value, record) => record.type === value,
     },
     {
       title: "Action",
@@ -646,7 +678,7 @@ const AdminProduct = () => {
             </Form.Item>
 
             {/* Type field */}
-            {/* Type selection */}
+                {/* Type selection */}
             <Form.Item
               label="Type"
               name="type"
@@ -662,7 +694,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
 
-            {/* Add Type form */}
+                {/* Add Type form */}
             {productState.type === "add_type" && (
               <Form.Item
                 label='New Type'
@@ -671,11 +703,11 @@ const AdminProduct = () => {
                   { required: true, message: "Please input type of product!" },
                 ]}
               >
-                <InputComponent
-                  value={productState.newType}
-                  onChange={handleOnChange}
-                  name="newType"
-                />
+                  <InputComponent
+                    value={productState.newType}
+                    onChange={handleOnChange}
+                    name="newType"
+                  />
               </Form.Item>
             )}
 
@@ -738,6 +770,18 @@ const AdminProduct = () => {
               <InputComponent
                 name="description"
                 value={productState.description}
+                onChange={handleOnChange}
+              />
+            </Form.Item>
+
+            {/* Discount field */}
+            <Form.Item
+              label="Discount"
+              name="discount"
+            >
+              <InputComponent
+                name="discount"
+                value={productState.discount}
                 onChange={handleOnChange}
               />
             </Form.Item>
@@ -890,6 +934,18 @@ const AdminProduct = () => {
               <InputComponent
                 name="description"
                 value={stateDetailedProduct.description}
+                onChange={handleOnChangeDetailed}
+              />
+            </Form.Item>
+
+            {/* Discount field */}
+            <Form.Item
+              label="Discount"
+              name="discount"
+            >
+              <InputComponent
+                name="discount"
+                value={stateDetailedProduct.discount}
                 onChange={handleOnChangeDetailed}
               />
             </Form.Item>

@@ -2,7 +2,7 @@ import style from "styled-components";
 
 export const WrapperContainerLeft = style.div`
   flex: 1;
-  padding: 40px 45px 24px;
+  padding: 0px 45px 24px;
   display: flex;
   flex-direction: column;
 `;
