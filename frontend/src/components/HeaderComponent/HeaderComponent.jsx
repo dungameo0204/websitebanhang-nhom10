@@ -91,7 +91,7 @@ const HeaderComponent = () => {
     <div>
       <WrapperHeader >
         <Col span={6}>
-          <WrapperTextHeader style={{cursor:'pointer'}} onClick={handleNavigateHomePage}>LAPTRINHWEB</WrapperTextHeader>
+          <WrapperTextHeader style={{cursor:'pointer'}} onClick={handleNavigateHomePage}>NHOM10</WrapperTextHeader>
         </Col>
         <Col span={12}>
           <ButtonInputSearch
