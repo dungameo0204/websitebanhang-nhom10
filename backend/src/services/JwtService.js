@@ -7,7 +7,7 @@ const generateAccessToken = (payload) => {
         {...payload},
         process.env.ACCESS_TOKEN,   
         {
-            expiresIn: '300s'
+            expiresIn: '5d'
         }
 
     );
